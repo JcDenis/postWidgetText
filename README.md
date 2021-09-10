@@ -1,5 +1,7 @@
 # README
 
+Current git version is a non working version taken from 2013.
+
 ## WHAT IS POSTWIDGETTEXT ?
 
 "Post widget text" is a plugin for the open-source 
