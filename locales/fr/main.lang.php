@@ -77,5 +77,3 @@ $GLOBALS['__l10n']['Posts widgets'] = 'Widgets de billets';
 
 #index.php:157
 $GLOBALS['__l10n']['Delete selected widgets'] = 'Effacer les widgets texte selectionnés';
-
-?>

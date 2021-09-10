@@ -1,20 +1,19 @@
 <?php
-# -- BEGIN LICENSE BLOCK ----------------------------------
-#
-# This file is part of postWidgetText, a plugin for Dotclear 2.
-# 
-# Copyright (c) 2009-2013 Jean-Christian Denis and contributors
-# contact@jcdenis.fr http://jcd.lv
-# 
-# Licensed under the GPL version 2.0 license.
-# A copy of this license is available in LICENSE file or at
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-#
-# -- END LICENSE BLOCK ------------------------------------
+/**
+ * @brief postWidgetText, a plugin for Dotclear 2
+ * 
+ * @package Dotclear
+ * @subpackage Plugin
+ * 
+ * @author Jean-Christian Denis and Contributors
+ * 
+ * @copyright Jean-Christian Denis
+ * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 
 if (!defined('DC_CONTEXT_ADMIN')) {
 
-	return null;
+    return null;
 }
 
 dcPage::check('usage,contentadmin');
@@ -23,35 +22,35 @@ $pwt = new postWidgetText($core);
 
 # Delete widgets
 if (!empty($_POST['save']) && !empty($_POST['widgets'])) {
-	try {
-		foreach($_POST['widgets'] as $k => $id) {
-			$id = (integer) $id;
-			$pwt->delWidget($id);
-		}
+    try {
+        foreach($_POST['widgets'] as $k => $id) {
+            $id = (integer) $id;
+            $pwt->delWidget($id);
+        }
 
-		dcPage::addSuccessNotice(
-			__('Posts widgets successfully delete.')
-		);
-		http::redirect(
-			$p_url
-		);
-	}
-	catch (Exception $e) {
-		$core->error->add($e->getMessage());
-	}
+        dcPage::addSuccessNotice(
+            __('Posts widgets successfully delete.')
+        );
+        http::redirect(
+            $p_url
+        );
+    }
+    catch (Exception $e) {
+        $core->error->add($e->getMessage());
+    }
 }
 
 # Combos
 $sortby_combo = array(
-	__('Post title')	=> 'post_title',
-	__('Post date')	=> 'post_dt',
-	__('Widget title')	=> 'option_title',
-	__('Widget date')	=> 'option_upddt',
+    __('Post title')    => 'post_title',
+    __('Post date')    => 'post_dt',
+    __('Widget title')    => 'option_title',
+    __('Widget date')    => 'option_upddt',
 );
 
 $order_combo = array(
-	__('Descending')	=> 'desc',
-	__('Ascending')	=> 'asc'
+    __('Descending')    => 'desc',
+    __('Ascending')    => 'asc'
 );
 
 # Filters
@@ -63,55 +62,55 @@ $order = !empty($_GET['order']) ? $_GET['order'] : 'desc';
 $page = !empty($_GET['page']) ? (integer) $_GET['page'] : 1;
 
 if (!empty($_GET['nb']) && (integer) $_GET['nb'] > 0) {
-	if ($nb_per_page != $_GET['nb']) {
-		$show_filters = true;
-	}
-	$nb_per_page = (integer) $_GET['nb'];
+    if ($nb_per_page != $_GET['nb']) {
+        $show_filters = true;
+    }
+    $nb_per_page = (integer) $_GET['nb'];
 }
 $params['limit'] = array((($page-1)*$nb_per_page), $nb_per_page);
 
 if ($sortby !== '' && in_array($sortby,$sortby_combo)) {
-	if ($order !== '' && in_array($order,$order_combo)) {
-		$params['order'] = $sortby.' '.$order;
-	}
-	if ($sortby != 'post_dt' || $order != 'desc') {
-		$show_filters = true;
-	}
+    if ($order !== '' && in_array($order,$order_combo)) {
+        $params['order'] = $sortby.' '.$order;
+    }
+    if ($sortby != 'post_dt' || $order != 'desc') {
+        $show_filters = true;
+    }
 }
 
 # Get posts with text widget
 try {
-	$posts = $pwt->getWidgets($params);
-	$counter = $pwt->getWidgets($params, true);
-	$posts_list = new postWidgetTextList(
-		$core,
-		$posts,
-		$counter->f(0)
-	);
+    $posts = $pwt->getWidgets($params);
+    $counter = $pwt->getWidgets($params, true);
+    $posts_list = new postWidgetTextList(
+        $core,
+        $posts,
+        $counter->f(0)
+    );
 }
 catch (Exception $e) {
-	$core->error->add($e->getMessage());
+    $core->error->add($e->getMessage());
 }
 
 # Display
 echo '
 <html><head><title>'.__('Post widget text').'</title>'.
 dcPage::jsLoad(
-	'js/filter-controls.js'
+    'js/filter-controls.js'
 ).
 '<script type="text/javascript">'."\n".
 "//<![CDATA["."\n".
 dcPage::jsVar(
-	'dotclear.msg.show_filters',
-	$show_filters ? 'true':'false'
+    'dotclear.msg.show_filters',
+    $show_filters ? 'true':'false'
 )."\n".
 dcPage::jsVar(
-	'dotclear.msg.filter_posts_list',
-	__('Show filters and display options')
+    'dotclear.msg.filter_posts_list',
+    __('Show filters and display options')
 )."\n".
 dcPage::jsVar(
-	'dotclear.msg.cancel_the_filter',
-	__('Cancel filters and display options')
+    'dotclear.msg.cancel_the_filter',
+    __('Cancel filters and display options')
 )."\n".
 "//]]>\n".
 "</script>\n".'
@@ -119,10 +118,10 @@ dcPage::jsVar(
 <body>'.
 
 dcPage::breadcrumb(
-	array(
-		html::escapeHTML($core->blog->name) => '',
-		__('Posts widgets') => ''
-	)
+    array(
+        html::escapeHTML($core->blog->name) => '',
+        __('Posts widgets') => ''
+    )
 ).
 dcPage::notices().'
 
@@ -151,20 +150,20 @@ form::hidden(array('p'), 'postWidgetText').'
 </form>'.
 
 $posts_list->display($page, $nb_per_page,
-	'<form action="'.$p_url.'" method="post" id="form-periods">'.
-	'%s'.
-	'<div class="two-cols">'.
-	'<p class="col checkboxes-helpers"></p>'.
-	'<p class="col right">'.
-	'<input type="submit" name="save" value="'.__('Delete selected widgets').'" /></p>'.
-	form::hidden(array('sortby'), $sortby).
-	form::hidden(array('order'), $order).
-	form::hidden(array('page'), $page).
-	form::hidden(array('nb'), $nb_per_page).
-	form::hidden(array('p'), 'postWidgetText').
-	$core->formNonce().
-	'</div>'.
-	'</form>'
+    '<form action="'.$p_url.'" method="post" id="form-periods">'.
+    '%s'.
+    '<div class="two-cols">'.
+    '<p class="col checkboxes-helpers"></p>'.
+    '<p class="col right">'.
+    '<input type="submit" name="save" value="'.__('Delete selected widgets').'" /></p>'.
+    form::hidden(array('sortby'), $sortby).
+    form::hidden(array('order'), $order).
+    form::hidden(array('page'), $page).
+    form::hidden(array('nb'), $nb_per_page).
+    form::hidden(array('p'), 'postWidgetText').
+    $core->formNonce().
+    '</div>'.
+    '</form>'
 );
 
 # Footer
