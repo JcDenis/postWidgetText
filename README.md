@@ -13,7 +13,7 @@ Add a widget related to an entry with custom titles and content.
 
   * permissions to manage widgets
   * permissions to manage entries
-  * Dotclear 2.6
+  * Dotclear 2.19
 
 ## USAGE
 
@@ -22,4 +22,10 @@ Dotaddict repository. (See Dotclear's documentation to know how do this)
 
 Add and configure "Post widget text" from widgets manager.
 Manage "widget" related to an entry from entry edition page.
-Manage (deleted) "widgets" from sidebar menu called "Post widget text".
+Manage (delete) "widgets" from sidebar menu called "Post widget text".
+
+## MORE
+
+ * License : GNU GPL v2
+ * Source & contribution : [GitHub Page](https://github.com/JcDenis/postWidgetText)
+ * Packages & details:  [Dotaddict Page](https://plugins.dotaddict.org/dc2/details/postWidgetText)

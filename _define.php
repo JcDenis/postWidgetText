@@ -12,26 +12,22 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-if (!defined('DC_RC_PATH')) {
 
-	return null;
+if (!defined('DC_RC_PATH')) {
+    return null;
 }
 
 $this->registerModule(
-	/* Name */
-	"Post widget text",
-	/* Description*/
-	"Add a widget with a text related to an entry",
-	/* Author */
-	"Jean-Christian Denis",
-	/* Version */
-	'2013.11.20',
-	/* Properies */
-	array(
-		'permissions' => 'usage,contentadmin',
-		'type' => 'plugin',
-		'dc_min' => '2.6',
-		'support' => 'http://jcd.lv/q=postWidgetText',
-		'details' => 'http://plugins.dotaddict.org/dc2/details/postWidgetText'
-	)
+    'Post widget text',
+    'Add a widget with a text related to an entry',
+    'Jean-Christian Denis and Contributors',
+    '2021.00.00.1',
+    [
+        'requires' => [['core', '2.19']],
+        'permissions' => 'usage,contentadmin',
+        'type'=> 'plugin',
+        'support'=> 'https://github.com/JcDenis/postWidgetText',
+        'details'=> 'https://plugins.dotaddict.org/dc2/details/postWidgetText',
+        'repository' => 'https://raw.githubusercontent.com/JcDenis/postWidgetText/master/dcstore.xml'
+    ]
 );
