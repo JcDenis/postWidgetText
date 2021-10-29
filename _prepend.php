@@ -12,17 +12,13 @@
  */
 
 if (!defined('DC_RC_PATH')) {
-
     return null;
 }
 
-$__autoload['postWidgetText'] = 
-    dirname(__FILE__).'/inc/class.postwidgettext.php';
-$__autoload['postWidgetTextDashboard'] = 
-    dirname(__FILE__).'/inc/lib.pwt.dashboard.php';
-$__autoload['postWidgetTextAdmin'] = 
-    dirname(__FILE__).'/inc/lib.pwt.admin.php';
-$__autoload['postWidgetTextBackup'] = 
-    dirname(__FILE__).'/inc/lib.pwt.backup.php';
-$__autoload['postWidgetTextList'] = 
-    dirname(__FILE__).'/inc/lib.pwt.list.php';
+$d = dirname(__FILE__) . '/inc/';
+
+$__autoload['postWidgetText']          = $d . 'class.postwidgettext.php';
+$__autoload['postWidgetTextDashboard'] = $d . 'lib.pwt.dashboard.php';
+$__autoload['postWidgetTextAdmin']     = $d . 'lib.pwt.admin.php';
+$__autoload['postWidgetTextBackup']    = $d . 'lib.pwt.backup.php';
+$__autoload['postWidgetTextList']      = $d . 'lib.pwt.list.php';

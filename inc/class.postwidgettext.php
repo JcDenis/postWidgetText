@@ -12,7 +12,6 @@
  */
 
 if (!defined('DC_RC_PATH')) {
-
     return null;
 }
 
@@ -27,7 +26,7 @@ class postWidgetText
     {
         $this->core =& $core;
         $this->con =& $this->core->con;
-        $this->table = $this->core->prefix.'post_option';
+        $this->table = $this->core->prefix . 'post_option';
         $this->blog = $core->con->escape($core->blog->id);
     }
 
@@ -56,9 +55,9 @@ class postWidgetText
         $this->core->blog->triggerBlog();
     }
 
-    public function getWidgets($params,$count_only=false)
+    public function getWidgets($params, $count_only = false)
     {
-        if (!isset($params['columns'])) $params['columns'] = array();
+        if (!isset($params['columns'])) $params['columns'] = [];
         $params['columns'][] = 'option_id';
         $params['columns'][] = 'option_creadt';
         $params['columns'][] = 'option_upddt';
@@ -72,13 +71,13 @@ class postWidgetText
         if (!isset($params['from'])) {
             $params['from'] = '';
         }
-        $params['from'] .= 'LEFT JOIN '.$this->table.' W ON P.post_id=W.post_id ';
+        $params['from'] .= 'LEFT JOIN ' . $this->table . ' W ON P.post_id=W.post_id ';
 
         if (!isset($params['sql'])) {
             $params['sql'] = '';
         }
         if (isset($params['option_type'])) {
-            $params['sql'] .= "AND W.option_type = '".$this->con->escape($params['option_type'])."' ";
+            $params['sql'] .= "AND W.option_type = '" . $this->con->escape($params['option_type']) . "' ";
         }
         else {
             $params['sql'] .= "AND W.option_type = 'postwidgettext' ";
@@ -106,7 +105,7 @@ class postWidgetText
         try {
             $rs = $this->con->select(
                 'SELECT MAX(option_id) '.
-                'FROM '.$this->table 
+                'FROM ' . $this->table 
             );
 
             $cur->option_id = (integer) $rs->f(0) + 1;
@@ -128,7 +127,7 @@ class postWidgetText
         return $cur->option_id;
     }
 
-    public function updWidget($id,&$cur)
+    public function updWidget($id, &$cur)
     {
         if (!$this->core->auth->check('usage,contentadmin', $this->blog)) {
             throw new Exception(__('You are not allowed to update entries text widget'));
@@ -140,7 +139,7 @@ class postWidgetText
             throw new Exception(__('No such ID'));
         }
 
-        $this->getWidgetContent($cur,$id);
+        $this->getWidgetContent($cur, $id);
 
         $cur->option_upddt = date('Y-m-d H:i:s');
 
@@ -157,11 +156,11 @@ class postWidgetText
             }
         }
 
-        $cur->update('WHERE option_id = '.$id.' ');
+        $cur->update('WHERE option_id = ' . $id . ' ');
         $this->triggerBlog();
     }
 
-    public function delWidget($id,$type='postwidgettext')
+    public function delWidget($id, $type = 'postwidgettext')
     {
         if (!$this->core->auth->check('delete,contentadmin', $this->blog)) {
             throw new Exception(__('You are not allowed to delete entries text widget'));
@@ -187,9 +186,9 @@ class postWidgetText
         }
 
         $this->con->execute(
-            'DELETE FROM '.$this->table.' '.
-            'WHERE option_id = '.$id.' '.
-            "AND option_type = '".$this->con->escape($type)."' "
+            'DELETE FROM ' . $this->table . ' ' .
+            'WHERE option_id = ' . $id . ' ' .
+            "AND option_type = '" . $this->con->escape($type) . "' "
         );
 
         $this->triggerBlog();
@@ -213,14 +212,14 @@ class postWidgetText
     {
         if ($format == 'wiki') {
             $this->core->initWikiPost();
-            $this->core->wiki2xhtml->setOpt('note_prefix','wnote-'.$option_id);
-            if (strpos($lang,'fr') === 0) {
+            $this->core->wiki2xhtml->setOpt('note_prefix','wnote-' . $option_id);
+            if (strpos($lang, 'fr') === 0) {
                 $this->core->wiki2xhtml->setOpt('active_fr_syntax', 1);
             }
         }
 
         if ($content) {
-            $content_xhtml = $this->core->callFormater($format,$content);
+            $content_xhtml = $this->core->callFormater($format, $content);
             $content_xhtml = $this->core->HTMLfilter($content_xhtml);
         }
         else {
@@ -230,11 +229,11 @@ class postWidgetText
         $excerpt = $excerpt_xhtml = '';
 
         # --BEHAVIOR-- coreAfterPostContentFormat
-        $this->core->callBehavior('coreAfterPostContentFormat',array(
+        $this->core->callBehavior('coreAfterPostContentFormat', [
             'excerpt' => &$excerpt,
             'content' => &$content,
             'excerpt_xhtml' => &$excerpt_xhtml,
             'content_xhtml' => &$content_xhtml
-        ));
+        ]);
     }
 }

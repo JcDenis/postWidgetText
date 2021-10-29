@@ -12,7 +12,6 @@
  */
 
 if (!defined('DC_CONTEXT_ADMIN')) {
-
     return null;
 }
 
@@ -26,12 +25,12 @@ class postWidgetTextBackup
     public static function exportSingle(dcCore $core, $exp, $blog_id)
     {
         $exp->export('postwidgettext',
-            'SELECT option_type, option_content, '.
-            'option_content_xhtml, W.post_id '.
-            'FROM '.$core->prefix.'post_option W '.
-            'LEFT JOIN '.$core->prefix.'post P '.
-            'ON P.post_id = W.post_id '.
-            "WHERE P.blog_id = '".$blog_id."' ".
+            'SELECT option_type, option_content, ' .
+            'option_content_xhtml, W.post_id ' .
+            'FROM ' . $core->prefix . 'post_option W ' .
+            'LEFT JOIN ' . $core->prefix . 'post P ' .
+            'ON P.post_id = W.post_id ' .
+            "WHERE P.blog_id = '" . $blog_id . "' " .
             "AND W.option_type = 'postwidgettext' "
         );
     }
@@ -39,11 +38,11 @@ class postWidgetTextBackup
     public static function exportFull(dcCore $core, $exp)
     {
         $exp->export('postwidgettext',
-            'SELECT option_type, option_content, '.
+            'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id '.
-            'FROM '.$core->prefix.'post_option W '.
-            'LEFT JOIN '.$core->prefix.'post P '.
-            'ON P.post_id = W.post_id '.
+            'FROM ' . $core->prefix . 'post_option W ' .
+            'LEFT JOIN ' . $core->prefix . 'post P ' .
+            'ON P.post_id = W.post_id ' .
             "WHERE W.option_type = 'postwidgettext' "
         );
     }
@@ -51,7 +50,7 @@ class postWidgetTextBackup
     public static function importInit($bk, dcCore $core)
     {
         $bk->cur_postwidgettext = $core->con->openCursor(
-            $core->prefix.'post_option'
+            $core->prefix . 'post_option'
         );
         $bk->postwidgettext = new postWidgetText($core);
     }
@@ -63,9 +62,9 @@ class postWidgetTextBackup
         ) {
             $line->post_id = $bk->old_ids['post'][(integer) $line->post_id];
 
-            $exists = $bk->postwidgettext->getWidgets(array(
-                'post_id' => $line->post_id)
-            );
+            $exists = $bk->postwidgettext->getWidgets([
+                'post_id' => $line->post_id
+            ]);
 
             if ($exists->isEmpty()) {
                 $bk->cur_postwidgettext->clean();
@@ -90,12 +89,12 @@ class postWidgetTextBackup
         }
     }
 
-    public static function importFull($line ,$bk, dcCore $core)
+    public static function importFull($line, $bk, dcCore $core)
     {
         if ($line->__name == 'postwidgettext') {
-            $exists = $bk->postwidgettext->getWidgets(array(
-                'post_id' => $line->post_id)
-            );
+            $exists = $bk->postwidgettext->getWidgets([
+                'post_id' => $line->post_id
+            ]);
 
             if ($exists->isEmpty()) {
                 $bk->cur_postwidgettext->clean();

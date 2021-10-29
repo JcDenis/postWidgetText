@@ -31,20 +31,14 @@ class postWidgetTextDashboard
      */
     public static function favorites(dcCore $core, $favs)
     {
-        $favs->register('postWidgetText', array(
-            'title'        => __('Post widget text'),
-            'url'        => 'plugin.php?p=postWidgetText',
-            'small-icon'    => 'index.php?pf=postWidgetText/icon.png',
-            'large-icon'    => 'index.php?pf=postWidgetText/icon-big.png',
-            'permissions'    => $core->auth->check(
-                'usage,contentadmin',
-                $core->blog->id
-            ),
-            'active_cb'    => array(
-                'postWidgetTextDashboard', 
-                'active'
-            )
-        ));
+        $favs->register('postWidgetText', [
+            'title'       => __('Post widget text'),
+            'url'         => $core->adminurl->get('admin.plugin.postWidgetText'),
+            'small-icon'  => dcPage::getPF('postWidgetText/icon.png'),
+            'large-icon'  => dcPage::getPF('postWidgetText/icon-big.png'),
+            'permissions' => $core->auth->check('usage,contentadmin', $core->blog->id),
+            'active_cb'   => ['postWidgetTextDashboard', 'active']
+        ]);
     }
 
     /**

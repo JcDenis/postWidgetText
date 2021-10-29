@@ -21,11 +21,11 @@ $this->registerModule(
     'Jean-Christian Denis and Contributors',
     '2021.00.00.1',
     [
-        'requires' => [['core', '2.19']],
+        'requires'    => [['core', '2.19']],
         'permissions' => 'usage,contentadmin',
-        'type'=> 'plugin',
-        'support'=> 'https://github.com/JcDenis/postWidgetText',
-        'details'=> 'https://plugins.dotaddict.org/dc2/details/postWidgetText',
-        'repository' => 'https://raw.githubusercontent.com/JcDenis/postWidgetText/master/dcstore.xml'
+        'type'        => 'plugin',
+        'support'     => 'https://github.com/JcDenis/postWidgetText',
+        'details'     => 'https://plugins.dotaddict.org/dc2/details/postWidgetText',
+        'repository'  => 'https://raw.githubusercontent.com/JcDenis/postWidgetText/master/dcstore.xml'
     ]
 );

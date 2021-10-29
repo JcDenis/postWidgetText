@@ -12,7 +12,6 @@
  */
 
 if (!defined('DC_CONTEXT_ADMIN')) {
-
     return null;
 }
 
@@ -52,15 +51,15 @@ class postWidgetTextAdmin
     public static function form($main, $sidebar, $post)
     {
         # _POST fields
-        $title = empty($_POST['post_wtitle']) ? '' : $_POST['post_wtitle'];
-        $content = empty($_POST['post_wtext']) ? '' : $_POST['post_wtext'];
+        $title = $_POST['post_wtitle'] ?? '';
+        $content = $_POST['post_wtext'] ?? '';
 
         # Existing post
         if ($post) {
             $post_id = (integer) $post->post_id;
 
             $pwt = new postWidgetText($GLOBALS['core']);
-            $w = $pwt->getWidgets(array('post_id' => $post_id));
+            $w = $pwt->getWidgets(['post_id' => $post_id]);
 
             # Existing widget
             if (!$w->isEmpty()) {
@@ -70,18 +69,18 @@ class postWidgetTextAdmin
         }
 
         $main['post_widget'] = 
-        '<div id="post-wtext-form">'.
-        '<h4>'.__('Additional widget').'</h4>'.
+        '<div id="post-wtext-form">' .
+        '<h4>' . __('Additional widget') . '</h4>' .
 
-        '<p class="col">'.
-        '<label class="bold" for="post_wtitle">'.__('Widget title:').'</label>'.
-        form::field('post_wtitle',20,255,html::escapeHTML($title),'maximal').
-        '</p>'.
+        '<p class="col">' 
+        '<label class="bold" for="post_wtitle">' . __('Widget title:') . '</label>' .
+        form::field('post_wtitle', 20, 255, html::escapeHTML($title), 'maximal') .
+        '</p>' .
 
-        '<p class="area" id="post-wtext">'.
-        '<label class="bold" for="post_wtext">'.__('Wigdet text:').'</label>'.
-        form::textarea('post_wtext',50,5,html::escapeHTML($content)).
-        '</p>'.
+        '<p class="area" id="post-wtext">' .
+        '<label class="bold" for="post_wtext">' .__('Wigdet text:') . '</label>' .
+        form::textarea('post_wtext', 50, 5, html::escapeHTML($content)) .
+        '</p>' .
 
         '</div>';
     }
@@ -91,16 +90,14 @@ class postWidgetTextAdmin
         $post_id = (integer) $post_id;
 
         # _POST fields
-        $title = isset($_POST['post_wtitle']) && !empty($_POST['post_wtitle']) ? 
-            $_POST['post_wtitle'] : '';
-        $content = isset($_POST['post_wtext']) && !empty($_POST['post_wtext']) ? 
-            $_POST['post_wtext'] : '';
+        $title = $_POST['post_wtitle'] ?? '';
+        $content = $_POST['post_wtext'] ?? '';
 
         # Object
         $pwt = new postWidgetText($GLOBALS['core']);
 
         # Get existing widget
-        $w = $pwt->getWidgets(array('post_id'=>$post_id));
+        $w = $pwt->getWidgets(['post_id' => $post_id]);
 
         # If new content is empty, delete old existing widget
         if (empty($title) && empty($content) && !$w->isEmpty()) {
@@ -111,11 +108,11 @@ class postWidgetTextAdmin
         if (!empty($title) || !empty($content)) {
             $wcur = $pwt->openCursor();
             $wcur->post_id        = $post_id;
-            $wcur->option_type        = 'postwidgettext';
-            $wcur->option_lang        = $cur->post_lang;
-            $wcur->option_format    = $cur->post_format;
-            $wcur->option_title        = $title;
-            $wcur->option_content    = $content;
+            $wcur->option_type    = 'postwidgettext';
+            $wcur->option_lang    = $cur->post_lang;
+            $wcur->option_format  = $cur->post_format;
+            $wcur->option_title   = $title;
+            $wcur->option_content = $content;
 
             # Create widget
             if ($w->isEmpty()) {
@@ -123,7 +120,7 @@ class postWidgetTextAdmin
             }
             # Upddate widget
             else {
-                $pwt->updWidget($w->option_id,$wcur);
+                $pwt->updWidget($w->option_id, $wcur);
             }
         }
     }
@@ -136,7 +133,7 @@ class postWidgetTextAdmin
         $pwt = new postWidgetText($GLOBALS['core']);
 
         # Get existing widget
-        $w = $pwt->getWidgets(array('post_id'=>$post_id));
+        $w = $pwt->getWidgets(['post_id' => $post_id]);
 
         # If new content is empty, delete old existing widget
         if (!$w->isEmpty()) {

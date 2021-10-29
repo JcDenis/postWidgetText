@@ -12,7 +12,6 @@
  */
 
 if (!defined('DC_RC_PATH')) {
-
     return null;
 }
 
