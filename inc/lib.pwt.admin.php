@@ -23,9 +23,30 @@ if (!defined('DC_CONTEXT_ADMIN')) {
  */
 class postWidgetTextAdmin
 {
+    public static function sortbyCombo()
+    {
+        return [
+            __('Post title')   => 'post_title',
+            __('Post date')    => 'post_dt',
+            __('Widget title') => 'option_title',
+            __('Widget date')  => 'option_upddt',
+        ];
+    }
+
+    public static function adminFiltersLists(dcCore $core, $sorts)
+    {
+        $sorts['pwt'] = [
+            __('Post widget text'),
+            self::sortbyCombo(),
+            'post_dt',
+            'desc',
+            [__('entries per page'), 20]
+        ];
+    }
+
     public static function headers()
     {
-        return dcPage::jsLoad('index.php?pf=postWidgetText/js/post.js');
+        return dcPage::jsLoad(dcPage::getPF('postWidgetText/js/post.js'));
     }
 
     public static function form($main, $sidebar, $post)

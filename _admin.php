@@ -12,7 +12,6 @@
  */
 
 if (!defined('DC_CONTEXT_ADMIN')) {
-
     return null;
 }
 
@@ -22,73 +21,35 @@ require dirname(__FILE__).'/_widgets.php';
 if ($core->blog->settings->postwidgettext->postwidgettext_active) {
     $_menu['Plugins']->addItem(
         __('Post widget text'),
-        'plugin.php?p=postWidgetText',
-        'index.php?pf=postWidgetText/icon.png',
-        preg_match(
-            '/plugin.php\?p=postWidgetText(&.*)?$/',
-            $_SERVER['REQUEST_URI']),
+        $core->adminurl->get('admin.plugin.postWidgetText'),
+        dcPage::getPF('postWidgetText/icon.png'),
+        preg_match('/' . preg_quote($core->adminurl->get('admin.plugin.postWidgetText')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
         $core->auth->check('contentadmin', $core->blog->id)
     );
 
-    $core->addBehavior(
-        'adminDashboardFavorites',
-        array('postWidgetTextDashboard', 'favorites')
-    );
+    $core->addBehavior('adminDashboardFavorites', ['postWidgetTextDashboard', 'favorites']);
 }
+# Pref
+$core->addBehavior('adminFiltersLists', ['postWidgetTextAdmin', 'adminFiltersLists']);
 # Post
-$core->addBehavior(
-    'adminPostHeaders',
-    array('postWidgetTextAdmin', 'headers'));
-$core->addBehavior(
-    'adminPostFormItems',
-    array('postWidgetTextAdmin', 'form'));
-$core->addBehavior(
-    'adminAfterPostUpdate',
-    array('postWidgetTextAdmin', 'save'));
-$core->addBehavior(
-    'adminAfterPostCreate',
-    array('postWidgetTextAdmin', 'save'));
-$core->addBehavior(
-    'adminBeforePostDelete',
-    array('postWidgetTextAdmin', 'delete'));
+$core->addBehavior('adminPostHeaders', ['postWidgetTextAdmin', 'headers']);
+$core->addBehavior('adminPostFormItems', ['postWidgetTextAdmin', 'form']);
+$core->addBehavior('adminAfterPostUpdate', ['postWidgetTextAdmin', 'save']);
+$core->addBehavior('adminAfterPostCreate', ['postWidgetTextAdmin', 'save']);
+$core->addBehavior('adminBeforePostDelete', ['postWidgetTextAdmin', 'delete']);
 
 # Plugin "pages"
-$core->addBehavior(
-    'adminPageHeaders',
-    array('postWidgetTextAdmin', 'headers'));
-$core->addBehavior(
-    'adminPageFormItems',
-    array('postWidgetTextAdmin', 'form'));
-$core->addBehavior(
-    'adminAfterPageUpdate',
-    array('postWidgetTextAdmin', 'save'));
-$core->addBehavior(
-    'adminAfterPageCreate',
-    array('postWidgetTextAdmin', 'save'));
-$core->addBehavior(
-    'adminBeforePageDelete',
-    array('postWidgetTextAdmin', 'delete'));
+$core->addBehavior('adminPageHeaders', ['postWidgetTextAdmin', 'headers']);
+$core->addBehavior('adminPageFormItems', ['postWidgetTextAdmin', 'form']);
+$core->addBehavior('adminAfterPageUpdate', ['postWidgetTextAdmin', 'save']);
+$core->addBehavior('adminAfterPageCreate', ['postWidgetTextAdmin', 'save']);
+$core->addBehavior('adminBeforePageDelete', ['postWidgetTextAdmin', 'delete']);
 
 # Plugin "importExport"
 if ($core->blog->settings->postwidgettext->postwidgettext_importexport_active) {
-    $core->addBehavior(
-        'exportFull',
-        array('postWidgetTextBackup', 'exportFull')
-    );
-    $core->addBehavior(
-        'exportSingle',
-        array('postWidgetTextBackup', 'exportSingle')
-    );
-    $core->addBehavior(
-        'importInit',
-        array('postWidgetTextBackup', 'importInit')
-    );
-    $core->addBehavior(
-        'importSingle',
-        array('postWidgetTextBackup', 'importSingle')
-    );
-    $core->addBehavior(
-        'importFull',
-        array('postWidgetTextBackup', 'importFull')
-    );
+    $core->addBehavior('exportFull', ['postWidgetTextBackup', 'exportFull']);
+    $core->addBehavior('exportSingle', ['postWidgetTextBackup', 'exportSingle']);
+    $core->addBehavior('importInit', ['postWidgetTextBackup', 'importInit']);
+    $core->addBehavior('importSingle', ['postWidgetTextBackup', 'importSingle']);
+    $core->addBehavior('importFull', ['postWidgetTextBackup', 'importFull']);
 }

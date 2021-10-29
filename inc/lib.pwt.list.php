@@ -23,14 +23,14 @@ if (!defined('DC_CONTEXT_ADMIN')) {
  */
 class postWidgetTextList extends adminGenericList
 {
-    public function display($page, $nb_per_page, $enclose='')
+    public function display($page, $nb_per_page, $enclose = '')
     {
         if ($this->rs->isEmpty()) {
 
             return '<p><strong>'.__('No widget').'</strong></p>';
         }
 
-        $pager = new dcPager($page, $this->rs_count, $nb_per_page,10);
+        $pager = new dcPager($page, $this->rs_count, $nb_per_page, 10);
         $pager->html_prev = $this->html_prev;
         $pager->html_next = $this->html_next;
         $pager->var_page = 'page';
@@ -92,7 +92,7 @@ class postWidgetTextList extends adminGenericList
         $content .= 
         '</tbody></table></div>';
 
-        return 
+        echo 
             $pager->getLinks().
             sprintf($enclose, $content).
             $pager->getLinks();
