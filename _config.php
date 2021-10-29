@@ -12,9 +12,9 @@
  */
 
 if (!defined('DC_CONTEXT_MODULE')) {
-
     return null;
 }
+dcPage::check('admin');
 
 $redir = empty($_REQUEST['redir']) ? 
     $list->getURL().'#plugins' : $_REQUEST['redir'];
@@ -39,7 +39,7 @@ if (!empty($_POST['save'])) {
         $core->blog->triggerBlog();
 
         dcPage::addSuccessNotice(
-            __('Configuration has been successfully updated.')
+            __('Configuration successfully updated')
         );
         http::redirect(
             $list->getURL('module=postWidgetText&conf=1&redir='.

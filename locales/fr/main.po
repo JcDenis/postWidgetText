@@ -1,112 +1,81 @@
-# Language: Français
-# Module: postWidgetText - 2013.11.20
-# Date: 2013-11-21 07:46:39
-# Translated with translater 2013.05.11
-
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: postWidgetText 2013.11.20\n"
+"Project-Id-Version: postWidgetText 2021.10.29\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-11-21T07:46:39+00:00\n"
+"PO-Revision-Date: 2021-10-29T22:39:42+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: _admin.php:23
-#: _admin.php:111
-#: _widgets.php:1
-#: index.php:96
 msgid "Post widget text"
 msgstr "Widget texte de billet"
 
-#: _config.php:51
 msgid "Enable plugin"
-msgstr "Activer l'extension"
+msgstr "Activer le plugin"
 
-#: _config.php:55
 msgid "Enable import/export behaviors"
 msgstr "Activer les fonctions d'import/export"
 
-#: _widgets.php:1
 msgid "Add a widget with a text related to an entry"
 msgstr "Ajouter un widget avec un texte relatif au billet"
 
-#: _widgets.php:1
 msgid "More about this entry"
 msgstr "En savoir plus sur ce billet"
 
-#: _widgets.php:1
 msgid "Use excerpt if no content"
 msgstr "Utiliser le résumé si le widget n'a pas de contenu"
 
-#: _widgets.php:1
 msgid "Show widget even if empty"
 msgstr "Afficher le widget même si il est vide"
 
-#: inc/class.postwidgettext.php:1
 msgid "You are not allowed to create an entry text widget"
 msgstr "Vous n'êtes pas autorisé à créer un widget texte sur ce billet"
 
-#: inc/class.postwidgettext.php:1
 msgid "You are not allowed to update entries text widget"
 msgstr "Vous n'êtes pas autorisé à modifier les widgets texte des billets"
 
-#: inc/class.postwidgettext.php:1
-#: inc/class.postwidgettext.php:1
 msgid "You are not allowed to delete this entry text widget"
 msgstr "Vous n'êtes pas autorisé à effacer le widget texte de ce billet"
 
-#: inc/class.postwidgettext.php:1
 msgid "You are not allowed to delete entries text widget"
 msgstr "Vous n'êtes pas autorisé à effacer les widgets texte des billets"
 
-#: inc/lib.pwt.admin.php:40
-msgid "Additional widget"
-msgstr "Widget additionnel"
-
-#: inc/lib.pwt.admin.php:42
-msgid "Widget title:"
-msgstr "Titre du widget :"
-
-#: inc/lib.pwt.admin.php:46
-msgid "Wigdet text:"
-msgstr "Texte du widget :"
-
-#: inc/lib.pwt.list.php:18
-msgid "No widget"
-msgstr "Pas de widget"
-
-#: inc/lib.pwt.list.php:31
-#: index.php:44
 msgid "Post title"
 msgstr "Titre du billet"
 
-#: inc/lib.pwt.list.php:32
-#: index.php:45
 msgid "Post date"
 msgstr "Date du billet"
 
-#: inc/lib.pwt.list.php:33
-#: index.php:46
 msgid "Widget title"
 msgstr "Titre du widget"
 
-#: inc/lib.pwt.list.php:34
-#: index.php:47
 msgid "Widget date"
 msgstr "Date du widget"
 
-#: index.php:31
+msgid "Additional widget"
+msgstr "Widget additionnel"
+
+msgid "Widget title:"
+msgstr "Titre du widget :"
+
+msgid "Wigdet text:"
+msgstr "Texte du widget :"
+
+msgid "No widget"
+msgstr "Pas de widget"
+
 msgid "Posts widgets successfully delete."
 msgstr "Widgets de billets effacés."
 
-#: index.php:122
 msgid "Posts widgets"
 msgstr "Widgets de billets"
 
-#: index.php:157
 msgid "Delete selected widgets"
 msgstr "Effacer les widgets texte selectionnés"
+
+msgid "Add a widget with a text related to an entry"
+msgstr "Ajouter un widget avec du texte relatif à un billet"
 
