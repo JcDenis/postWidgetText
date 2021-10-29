@@ -12,16 +12,12 @@
  */
 
 if (!defined('DC_RC_PATH')) {
-
     return null;
 }
 
 $core->blog->settings->addNamespace('postwidgettext');
 
-$core->addBehavior(
-    'initWidgets',
-    array('postWidgetTextWidget', 'init')
-);
+$core->addBehavior('initWidgets', ['postWidgetTextWidget', 'init']);
 
 /**
  * @ingroup DC_PLUGIN_POSTWIDGETTEXT
@@ -32,66 +28,55 @@ class postWidgetTextWidget
 {
     public static function init($w)
     {
-        global $core;
-
-        $w->create(
-            'postwidgettext',
-            __('Post widget text'),
-            array('postWidgetTextWidget', 'display'),
-            null,
-            __('Add a widget with a text related to an entry')
-        );
-        $w->postwidgettext->setting(
-            'title',
-            __('Title:'),
-            __('More about this entry'),
-            'text'
-        );
-        $w->postwidgettext->setting(
-            'excerpt',
-            __('Use excerpt if no content'),
-            0,
-            'check'
-        );
-        $w->postwidgettext->setting(
-            'show',
-            __('Show widget even if empty'),
-            0,
-            'check'
-        );
-        $w->postwidgettext->setting(
-            'content_only',
-            __('Content only'),
-            0,
-            'check'
-        );
-        $w->postwidgettext->setting(
-            'class',
-            __('CSS class:'),
-            ''
-        );
+        $w
+            ->create(
+                'postwidgettext',
+                __('Post widget text'),
+                ['postWidgetTextWidget', 'display'],
+                null,
+                __('Add a widget with a text related to an entry')
+            )
+            ->addTitle(__('More about this entry'))
+            ->setting(
+                'excerpt',
+                __('Use excerpt if no content'),
+                0,
+                'check'
+            )
+            ->setting(
+                'show',
+                __('Show widget even if empty'),
+                0,
+                'check'
+            )
+            ->addContentOnly()
+            ->addClass()
+            ->addOffline();
     }
 
     public static function display($w)
     {
         global $core, $_ctx; 
 
+        if ($w->offline) {
+            return null;
+        }
+
         if (!$core->blog->settings->postwidgettext->postwidgettext_active
-         || !$_ctx->exists('posts') 
-         || !$_ctx->posts->post_id
+            || !$_ctx->exists('posts') 
+            || !$_ctx->posts->post_id
         ) {
             return null;
         }
 
-        $title = (strlen($w->title) > 0) ? 
-                '<h2>'.html::escapeHTML($w->title).'</h2>' : null;
+        $title = $w->title ?: null;
         $content = '';
 
         $pwt = new postWidgetText($core);
-        $rs = $pwt->getWidgets(array('post_id'=>$_ctx->posts->post_id));
+        $rs = $pwt->getWidgets(['post_id' => $_ctx->posts->post_id]);
 
         if ('' != $rs->option_title) {
-            $title = '<h2>'.$rs->option_title.'</h2>';
+            $title = $rs->option_title;
         }
         if ('' != $rs->option_content_xhtml) {
             $content = $rs->option_content_xhtml;
@@ -100,12 +85,11 @@ class postWidgetTextWidget
             $content = $_ctx->posts->post_excerpt_xhtml;
         }
 
-        return '' == $content && !$w->show ?
-            null : 
-            ($w->content_only ? '' : '<div class="postwidgettext'.
-            ($w->class ? ' '.html::escapeHTML($w->class) : '').'">').
-            $title.
-            $content.
-            ($w->content_only ? '' : '</div>');
+        return $w->renderDiv(
+            $w->content_only,
+            'postwidgettext ' . $w->class,
+            '',
+            ($title ? $w->renderTitle(html::escapeHTML($title)) : '') . $content
+        );
     }
 }
