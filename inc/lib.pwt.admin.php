@@ -72,7 +72,7 @@ class postWidgetTextAdmin
         '<div id="post-wtext-form">' .
         '<h4>' . __('Additional widget') . '</h4>' .
 
-        '<p class="col">' 
+        '<p class="col">' .
         '<label class="bold" for="post_wtitle">' . __('Widget title:') . '</label>' .
         form::field('post_wtitle', 20, 255, html::escapeHTML($title), 'maximal') .
         '</p>' .
