@@ -1,9 +1,13 @@
-2021.00.00 - dev
+dev
 - clean up code
 - update license
 - update translations
 - check Dotclear 2.19
 - check php7.3+, php8.0
+- complete readme file
+- fix widget rendering
+- fix combo name
+- add user pref for posts list filters
 
 2013.11.21
 - Switch to Dotclear 2.6 and clean up code
