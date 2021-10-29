@@ -131,11 +131,11 @@ dcPage::notices().'
 <div class="table">
 <div class="cell">
 <p><label for="sortby" class="ib">'.__('Order by:').'</label> '.
-form::combo('sortby', $combo_sortby, $sortby).'</p>
+form::combo('sortby', $sortby_combo, $sortby).'</p>
 </div>
 <div class="cell">
 <p><label for="order" class="ib">'.__('Sort:').'</label> '.
-form::combo('order', $combo_order, $order).'</p>
+form::combo('order', $order_combo, $order).'</p>
 </div>
 <div class="cell">
 <p><span class="label ib">'.__('Show').'</span> <label for="nb" class="classic">'.
