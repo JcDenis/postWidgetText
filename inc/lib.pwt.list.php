@@ -21,7 +21,7 @@ if (!defined('DC_CONTEXT_ADMIN')) {
  * @brief postWidgetText - admin list methods.
  * @since 2.6
  */
-class postWidgetTextList extends adminGenericList
+class listPostWidgetText extends adminGenericList
 {
     public function display($page, $nb_per_page, $enclose = '')
     {
