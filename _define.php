@@ -19,9 +19,9 @@ $this->registerModule(
     'Post widget text',
     'Add a widget with a text related to an entry',
     'Jean-Christian Denis and Contributors',
-    '2021.00.00.1',
+    '2021.10.30',
     [
-        'requires'    => [['core', '2.19']],
+        'requires'    => [['core', '2.20']],
         'permissions' => 'usage,contentadmin',
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/postWidgetText',
