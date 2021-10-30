@@ -75,6 +75,10 @@ class postWidgetTextWidget
         $pwt = new postWidgetText($core);
         $rs = $pwt->getWidgets(['post_id' => $_ctx->posts->post_id]);
 
+        if ($rs->isEmpty()) {
+            return null;
+        }
+
         if ('' != $rs->option_title) {
             $title = $rs->option_title;
         }
