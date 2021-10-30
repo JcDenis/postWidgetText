@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: postWidgetText 2021.10.29\n"
+"Project-Id-Version: postWidgetText 2021.00.00.1\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-29T22:39:42+00:00\n"
+"PO-Revision-Date: 2021-10-30T08:40:16+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -13,14 +13,8 @@ msgstr ""
 msgid "Post widget text"
 msgstr "Widget texte de billet"
 
-msgid "Enable plugin"
-msgstr "Activer le plugin"
-
-msgid "Enable import/export behaviors"
-msgstr "Activer les fonctions d'import/export"
-
 msgid "Add a widget with a text related to an entry"
-msgstr "Ajouter un widget avec un texte relatif au billet"
+msgstr "Ajouter un widget avec du texte relatif à un billet"
 
 msgid "More about this entry"
 msgstr "En savoir plus sur ce billet"
@@ -55,6 +49,12 @@ msgstr "Titre du widget"
 msgid "Widget date"
 msgstr "Date du widget"
 
+msgid "Enable post widget text on this blog"
+msgstr "Activer les widgets texte de billet sur ce blog"
+
+msgid "Enable import/export behaviors"
+msgstr "Activer les fonctions d'import/export"
+
 msgid "Additional widget"
 msgstr "Widget additionnel"
 
@@ -75,7 +75,4 @@ msgstr "Widgets de billets"
 
 msgid "Delete selected widgets"
 msgstr "Effacer les widgets texte selectionnés"
-
-msgid "Add a widget with a text related to an entry"
-msgstr "Ajouter un widget avec du texte relatif à un billet"
 

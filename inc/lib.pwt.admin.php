@@ -48,7 +48,7 @@ class adminPostWidgetText
         <div class="col">
         <p><label for="active">' .
         form::checkbox('active', 1, (boolean) $blog_settings->postwidgettext->postwidgettext_active).
-        __('Enable plugin') . '</label></p>
+        __('Enable post widget text on this blog') . '</label></p>
         </div>
         <div class="col">
         <p><label for="importexport_active">' .
