@@ -17,8 +17,6 @@ if (!defined('DC_RC_PATH')) {
 
 $d = dirname(__FILE__) . '/inc/';
 
-$__autoload['postWidgetText']          = $d . 'class.postwidgettext.php';
-$__autoload['postWidgetTextDashboard'] = $d . 'lib.pwt.dashboard.php';
-$__autoload['postWidgetTextAdmin']     = $d . 'lib.pwt.admin.php';
-$__autoload['postWidgetTextBackup']    = $d . 'lib.pwt.backup.php';
-$__autoload['postWidgetTextList']      = $d . 'lib.pwt.list.php';
+$__autoload['postWidgetText']      = $d . 'class.postwidgettext.php';
+$__autoload['adminPostWidgetText'] = $d . 'lib.pwt.admin.php';
+$__autoload['listPostWidgetText']  = $d . 'lib.pwt.list.php';

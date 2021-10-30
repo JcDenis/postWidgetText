@@ -50,7 +50,7 @@ $params = $filter->params();
 try {
     $posts = $pwt->getWidgets($params);
     $counter = $pwt->getWidgets($params, true);
-    $posts_list = new postWidgetTextList($core, $posts, $counter->f(0));
+    $posts_list = new listPostWidgetText($core, $posts, $counter->f(0));
 }
 catch (Exception $e) {
     $core->error->add($e->getMessage());
