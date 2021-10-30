@@ -7,7 +7,9 @@ dev
 - complete readme file
 - fix widget rendering
 - fix combo name
+- fix javascript
 - add user pref for posts list filters
+- move config to blog pref
 
 2013.11.21
 - Switch to Dotclear 2.6 and clean up code

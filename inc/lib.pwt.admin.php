@@ -93,7 +93,12 @@ class adminPostWidgetText
 
     public static function adminPostHeaders()
     {
-        return dcPage::jsLoad(dcPage::getPF('postWidgetText/js/post.js'));
+        global $core;
+        $editor = $core->auth->getOption('editor');
+
+        return 
+            $core->callBehavior('adminPostEditor', $editor['xhtml'], 'pwt', ['#post_wtext'], 'xhtml') . 
+            dcPage::jsLoad(dcPage::getPF('postWidgetText/js/post.js'));
     }
 
     public static function adminPostFormItems($main, $sidebar, $post)
