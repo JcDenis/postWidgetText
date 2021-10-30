@@ -3,11 +3,9 @@
 [![Release](https://img.shields.io/github/v/release/JcDenis/postWidgetText)](https://github.com/JcDenis/postWidgetText/releases)
 [![Date](https://img.shields.io/github/release-date/JcDenis/postWidgetText)](https://github.com/JcDenis/postWidgetText/releases)
 [![Issues](https://img.shields.io/github/issues/JcDenis/postWidgetText)](https://github.com/JcDenis/postWidgetText/issues)
-[![Dotclear](https://img.shields.io/badge/dotclear-v2.19-blue.svg)](https://fr.dotclear.org/download)
+[![Dotclear](https://img.shields.io/badge/dotclear-v2.20-blue.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-green.svg)](https://plugins.dotaddict.org/dc2/details/postWidgetText)
 [![License](https://img.shields.io/github/license/JcDenis/postWidgetText)](https://github.com/JcDenis/postWidgetText/blob/master/LICENSE)
-
-Current git version is a non working version taken from 2013.
 
 ## WHAT IS POSTWIDGETTEXT ?
 
@@ -24,11 +22,14 @@ Add a widget related to an entry with custom titles and content.
   * permissions to manage entries
   * Dotclear 2.20
 
+Note this plugin add table called post_option to Dotclear database.
+
 ## USAGE
 
 First install _postWidgetText_, manualy from a zip package or from 
 Dotaddict repository. (See Dotclear's documentation to know how do this)
 
+Activate plugin from blog preferences page.
 Add and configure _Post widget text_ from widgets manager.
 Manage "widget" related to an entry from entry edition page.
 Manage (delete) "widgets" from sidebar menu called "Post widget text".

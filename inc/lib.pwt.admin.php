@@ -13,7 +13,7 @@
 
 /**
  * @ingroup DC_PLUGIN_POSTWIDGETTEXT
- * @brief postWidgetText - admin post methods.
+ * @brief postWidgetText - admin methods.
  * @since 2.20
  */
 class adminPostWidgetText

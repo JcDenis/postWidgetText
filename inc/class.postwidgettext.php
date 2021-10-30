@@ -15,6 +15,11 @@ if (!defined('DC_RC_PATH')) {
     return null;
 }
 
+/**
+ * @ingroup DC_PLUGIN_POSTWIDGETTEXT
+ * @brief postWidgetText - admin and public methods.
+ * @since 2.6
+ */
 class postWidgetText
 {
     public $core;
