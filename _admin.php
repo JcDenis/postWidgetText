@@ -28,6 +28,8 @@ if ($core->blog->settings->postwidgettext->postwidgettext_active) {
     );
 
     $core->addBehavior('adminDashboardFavorites', ['postWidgetTextDashboard', 'favorites']);
+    $core->addBehavior('adminBlogPreferencesForm', ['postWidgetTextAdmin', 'adminBlogPreferencesForm']);
+    $core->addBehavior('adminBeforeBlogSettingsUpdate', ['postWidgetTextAdmin', 'adminBeforeBlogSettingsUpdate']);
 }
 # Pref
 $core->addBehavior('adminFiltersLists', ['postWidgetTextAdmin', 'adminFiltersLists']);

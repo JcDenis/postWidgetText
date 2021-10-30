@@ -43,6 +43,34 @@ class postWidgetTextAdmin
         ];
     }
 
+    public static function adminBlogPreferencesForm(dcCore $core, dcSettings $blog_settings)
+    {
+        echo '
+        <div class="fieldset">
+        <h4 id="pwt_params">' . __('Post widget text') . '</h4>
+        <div class="two-cols">
+        <div class="col">
+        <p><label for="active">' .
+        form::checkbox('active', 1, (boolean) $blog_settings->postwidgettext->postwidgettext_active).
+        __('Enable plugin') . '</label></p>
+        </div>
+        <div class="col">
+        <p><label for="importexport_active">' .
+        form::checkbox('importexport_active', 1, (boolean) $blog_settings->postwidgettext->postwidgettext_importexport_active).
+        __('Enable import/export behaviors') . '</label></p>
+        </div>
+        </div>
+        <br class="clear" />
+        </div>';
+    }
+
+    public static function adminBeforeBlogSettingsUpdate(dcSettings $blog_settings)
+    {
+        $blog_settings->postwidgettext->put('postwidgettext_active', !empty($_POST['active']));
+        $blog_settings->postwidgettext->put('postwidgettext_importexport_active', !empty($_POST['importexport_active']));
+
+    }
+
     public static function headers()
     {
         return dcPage::jsLoad(dcPage::getPF('postWidgetText/js/post.js'));

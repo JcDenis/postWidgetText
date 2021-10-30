@@ -26,6 +26,9 @@ $this->registerModule(
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/postWidgetText',
         'details'     => 'https://plugins.dotaddict.org/dc2/details/postWidgetText',
-        'repository'  => 'https://raw.githubusercontent.com/JcDenis/postWidgetText/master/dcstore.xml'
+        'repository'  => 'https://raw.githubusercontent.com/JcDenis/postWidgetText/master/dcstore.xml',
+        'settings' => [
+            'blog' => '#params.pwt_params'
+        ]
     ]
 );
