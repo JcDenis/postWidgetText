@@ -18,7 +18,7 @@ $this->registerModule(
     'Post widget text',
     'Add a widget with a text related to an entry',
     'Jean-Christian Denis and Contributors',
-    '2021.10.30',
+    '2021.11.06',
     [
         'requires'    => [['core', '2.20']],
         'permissions' => 'usage,contentadmin',

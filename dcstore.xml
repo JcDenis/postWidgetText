@@ -1,12 +1,13 @@
+<?xml version="1.0"?>
 <modules xmlns:da="http://dotaddict.org/da/">
-<module id="postWidgetText">
-<name>Post widget text</name>
-<version>2021.10.30</version>
-<author>Jean-Christian Denis and Contributors</author>
-<desc>Add a widget with a text related to an entry</desc>
-<file>https://github.com/JcDenis/postWidgetText/releases/download/v2021.10.30/plugin-postWidgetText.zip</file>
-<da:dcmin>2.20</da:dcmin>
-<da:details>https://plugins.dotaddict.org/dc2/details/postWidgetText</da:details>
-<da:support>https://github.com/JcDenis/postWidgetText</da:support>
-</module>
+  <module id="postWidgetText">
+    <name>Post widget text</name>
+    <version>2021.11.06</version>
+    <author>Jean-Christian Denis and Contributors</author>
+    <desc>Add a widget with a text related to an entry</desc>
+    <file>https://github.com/JcDenis/postWidgetText/releases/download/v2021.11.06/plugin-postWidgetText.zip</file>
+    <da:dcmin>2.20</da:dcmin>
+    <da:details>https://plugins.dotaddict.org/dc2/details/postWidgetText</da:details>
+    <da:support>https://github.com/JcDenis/postWidgetText</da:support>
+  </module>
 </modules>

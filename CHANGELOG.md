@@ -1,5 +1,7 @@
 dev
 - ...
+
+2021.11.06
 - fix error on empty record on widget
 - update to PS12
 
@@ -13,7 +15,7 @@ dev
 - fix widget rendering
 - fix combo name
 - fix javascript
-- add user pref for posts list filters
+- add user pref for posts list filters (dc 2.20)
 - move config to blog pref
 
 2013.11.21
