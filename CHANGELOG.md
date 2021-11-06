@@ -1,7 +1,9 @@
 dev
 - ...
+- fix error on empty record on widget
+- update to PS12
 
-2021.11.01
+2021.10.30
 - clean up code
 - update license
 - update translations

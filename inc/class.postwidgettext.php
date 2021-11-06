@@ -1,16 +1,15 @@
 <?php
 /**
  * @brief postWidgetText, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and Contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 if (!defined('DC_RC_PATH')) {
     return null;
 }
@@ -29,10 +28,10 @@ class postWidgetText
 
     public function __construct($core)
     {
-        $this->core =& $core;
-        $this->con =& $this->core->con;
+        $this->core  = & $core;
+        $this->con   = & $this->core->con;
         $this->table = $this->core->prefix . 'post_option';
-        $this->blog = $core->con->escape($core->blog->id);
+        $this->blog  = $core->con->escape($core->blog->id);
     }
 
     public function tableName()
@@ -62,7 +61,9 @@ class postWidgetText
 
     public function getWidgets($params, $count_only = false)
     {
-        if (!isset($params['columns'])) $params['columns'] = [];
+        if (!isset($params['columns'])) {
+            $params['columns'] = [];
+        }
         $params['columns'][] = 'option_id';
         $params['columns'][] = 'option_creadt';
         $params['columns'][] = 'option_upddt';
@@ -83,8 +84,7 @@ class postWidgetText
         }
         if (isset($params['option_type'])) {
             $params['sql'] .= "AND W.option_type = '" . $this->con->escape($params['option_type']) . "' ";
-        }
-        else {
+        } else {
             $params['sql'] .= "AND W.option_type = 'postwidgettext' ";
         }
         unset($params['option_type']);
@@ -107,23 +107,24 @@ class postWidgetText
         }
 
         $this->lockTable();
+
         try {
             $rs = $this->con->select(
-                'SELECT MAX(option_id) '.
-                'FROM ' . $this->table 
+                'SELECT MAX(option_id) ' .
+                'FROM ' . $this->table
             );
 
-            $cur->option_id = (integer) $rs->f(0) + 1;
+            $cur->option_id     = (int) $rs->f(0) + 1;
             $cur->option_creadt = date('Y-m-d H:i:s');
-            $cur->option_upddt = date('Y-m-d H:i:s');
+            $cur->option_upddt  = date('Y-m-d H:i:s');
 
             $this->getWidgetContent($cur, $cur->option_id);
 
             $cur->insert();
             $this->unlockTable();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->unlockTable();
+
             throw $e;
         }
 
@@ -138,7 +139,7 @@ class postWidgetText
             throw new Exception(__('You are not allowed to update entries text widget'));
         }
 
-        $id = (integer) $id;
+        $id = (int) $id;
 
         if (empty($id)) {
             throw new Exception(__('No such ID'));
@@ -149,10 +150,10 @@ class postWidgetText
         $cur->option_upddt = date('Y-m-d H:i:s');
 
         if (!$this->core->auth->check('contentadmin', $this->blog)) {
-            $params['option_id'] = $id;
-            $params['user_id'] = $this->con->escape($this->core->auth->userID());
+            $params['option_id']  = $id;
+            $params['user_id']    = $this->con->escape($this->core->auth->userID());
             $params['no_content'] = true;
-            $params['limit'] = 1;
+            $params['limit']      = 1;
 
             $rs = $this->getWidgets($params);
 
@@ -171,17 +172,17 @@ class postWidgetText
             throw new Exception(__('You are not allowed to delete entries text widget'));
         }
 
-        $id = (integer) $id;
+        $id = (int) $id;
 
         if (empty($id)) {
             throw new Exception(__('No such ID'));
         }
 
         if (!$this->core->auth->check('contentadmin', $this->blog)) {
-            $params['option_id'] = $id;
-            $params['user_id'] = $this->con->escape($this->core->auth->userID());
+            $params['option_id']  = $id;
+            $params['user_id']    = $this->con->escape($this->core->auth->userID());
             $params['no_content'] = true;
-            $params['limit'] = 1;
+            $params['limit']      = 1;
 
             $rs = $this->getWidgets($params);
 
@@ -201,15 +202,18 @@ class postWidgetText
 
     private function getWidgetContent(&$cur, $option_id)
     {
-        $option_content = $cur->option_content;
+        $option_content       = $cur->option_content;
         $option_content_xhtml = $cur->option_content_xhtml;
 
         $this->setWidgetContent(
-            $option_id,$cur->option_format,$cur->option_lang,
-            $option_content,$option_content_xhtml
+            $option_id,
+            $cur->option_format,
+            $cur->option_lang,
+            $option_content,
+            $option_content_xhtml
         );
 
-        $cur->option_content = $option_content;
+        $cur->option_content       = $option_content;
         $cur->option_content_xhtml = $option_content_xhtml;
     }
 
@@ -217,7 +221,7 @@ class postWidgetText
     {
         if ($format == 'wiki') {
             $this->core->initWikiPost();
-            $this->core->wiki2xhtml->setOpt('note_prefix','wnote-' . $option_id);
+            $this->core->wiki2xhtml->setOpt('note_prefix', 'wnote-' . $option_id);
             if (strpos($lang, 'fr') === 0) {
                 $this->core->wiki2xhtml->setOpt('active_fr_syntax', 1);
             }
@@ -226,8 +230,7 @@ class postWidgetText
         if ($content) {
             $content_xhtml = $this->core->callFormater($format, $content);
             $content_xhtml = $this->core->HTMLfilter($content_xhtml);
-        }
-        else {
+        } else {
             $content_xhtml = '';
         }
 
@@ -235,8 +238,8 @@ class postWidgetText
 
         # --BEHAVIOR-- coreAfterPostContentFormat
         $this->core->callBehavior('coreAfterPostContentFormat', [
-            'excerpt' => &$excerpt,
-            'content' => &$content,
+            'excerpt'       => &$excerpt,
+            'content'       => &$content,
             'excerpt_xhtml' => &$excerpt_xhtml,
             'content_xhtml' => &$content_xhtml
         ]);

@@ -1,16 +1,15 @@
 <?php
 /**
  * @brief postWidgetText, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and Contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 if (!defined('DC_RC_PATH')) {
     return null;
 }
@@ -56,24 +55,24 @@ class postWidgetTextWidget
 
     public static function display($w)
     {
-        global $core, $_ctx; 
+        global $core, $_ctx;
 
         if ($w->offline) {
             return null;
         }
 
         if (!$core->blog->settings->postwidgettext->postwidgettext_active
-            || !$_ctx->exists('posts') 
+            || !$_ctx->exists('posts')
             || !$_ctx->posts->post_id
         ) {
             return null;
         }
 
-        $title = $w->title ?: null;
+        $title   = $w->title ?: null;
         $content = '';
 
         $pwt = new postWidgetText($core);
-        $rs = $pwt->getWidgets(['post_id' => $_ctx->posts->post_id]);
+        $rs  = $pwt->getWidgets(['post_id' => $_ctx->posts->post_id]);
 
         if ($rs->isEmpty()) {
             return null;

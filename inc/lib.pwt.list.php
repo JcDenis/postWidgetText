@@ -1,18 +1,16 @@
 <?php
 /**
  * @brief postWidgetText, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and Contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 if (!defined('DC_CONTEXT_ADMIN')) {
-
     return null;
 }
 
@@ -26,17 +24,15 @@ class listPostWidgetText extends adminGenericList
     public function display($page, $nb_per_page, $enclose = '')
     {
         if ($this->rs->isEmpty()) {
-
-            return '<p><strong>'.__('No widget').'</strong></p>';
+            return '<p><strong>' . __('No widget') . '</strong></p>';
         }
 
-        $pager = new dcPager($page, $this->rs_count, $nb_per_page, 10);
+        $pager            = new dcPager($page, $this->rs_count, $nb_per_page, 10);
         $pager->html_prev = $this->html_prev;
         $pager->html_next = $this->html_next;
-        $pager->var_page = 'page';
+        $pager->var_page  = 'page';
 
-        $content =
-        '<div class="table-outer">' .
+        $content = '<div class="table-outer">' .
         '<table class="clear">' .
         '<thead>' .
         '<tr>' .
@@ -49,23 +45,29 @@ class listPostWidgetText extends adminGenericList
         '</tr></thead><tbody>';
 
         while ($this->rs->fetch()) {
-
             $w_title = html::escapeHTML($this->rs->option_title);
             if ($w_title == '') {
                 $w_title = '<em>' . context::global_filter(
-                    $this->rs->option_content, 1, 1, 80, 0, 0
+                    $this->rs->option_content,
+                    1,
+                    1,
+                    80,
+                    0,
+                    0
                 ) . '</em>';
             }
 
-            $content .= 
-            '<tr class="line' . ($this->rs->post_status != 1 ? 
+            $content .= '<tr class="line' . (
+                $this->rs->post_status != 1 ?
                 ' offline' : ''
             ) . '" id="p' . $this->rs->post_id . '">' .
             '<td class="nowrap">' .
             form::checkbox(
-                array('widgets[]'),
+                ['widgets[]'],
                 $this->rs->option_id,
-                '', '', '',
+                '',
+                '',
+                '',
                 !$this->rs->isEditable()
             ) . '</td>' .
             '<td class="maximal"><a href="' .
@@ -89,10 +91,9 @@ class listPostWidgetText extends adminGenericList
             '</tr>';
         }
 
-        $content .= 
-        '</tbody></table></div>';
+        $content .= '</tbody></table></div>';
 
-        echo 
+        echo
             $pager->getLinks() .
             sprintf($enclose, $content) .
             $pager->getLinks();
