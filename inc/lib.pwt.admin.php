@@ -34,7 +34,7 @@ class adminPostWidgetText
             self::sortbyCombo(),
             'post_dt',
             'desc',
-            [__('entries per page'), 20]
+            [__('entries per page'), 20],
         ];
     }
 
@@ -73,7 +73,7 @@ class adminPostWidgetText
             'small-icon'  => dcPage::getPF('postWidgetText/icon.png'),
             'large-icon'  => dcPage::getPF('postWidgetText/icon-big.png'),
             'permissions' => dcCore::app()->auth->check('usage,contentadmin', dcCore::app()->blog->id),
-            'active_cb'   => ['adminPostWidgetText', 'adminDashboardFavoritesActive']
+            'active_cb'   => ['adminPostWidgetText', 'adminDashboardFavoritesActive'],
         ]);
     }
 
@@ -234,7 +234,7 @@ class adminPostWidgetText
             $line->post_id = $bk->old_ids['post'][(int) $line->post_id];
 
             $exists = $bk->postwidgettext->getWidgets([
-                'post_id' => $line->post_id
+                'post_id' => $line->post_id,
             ]);
 
             if ($exists->isEmpty()) {
@@ -258,7 +258,7 @@ class adminPostWidgetText
     {
         if ($line->__name == 'postwidgettext') {
             $exists = $bk->postwidgettext->getWidgets([
-                'post_id' => $line->post_id
+                'post_id' => $line->post_id,
             ]);
 
             if ($exists->isEmpty()) {

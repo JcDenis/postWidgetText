@@ -248,7 +248,7 @@ class postWidgetText
             'excerpt'       => &$excerpt,
             'content'       => &$content,
             'excerpt_xhtml' => &$excerpt_xhtml,
-            'content_xhtml' => &$content_xhtml
+            'content_xhtml' => &$content_xhtml,
         ]);
     }
 }

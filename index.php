@@ -15,9 +15,9 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 }
 
 dcPage::check(dcCore::app()->auth->makePermissions([
-            dcAuth::PERMISSION_USAGE,
-            dcAuth::PERMISSION_CONTENT_ADMIN,
-        ]));
+    dcAuth::PERMISSION_USAGE,
+    dcAuth::PERMISSION_CONTENT_ADMIN,
+]));
 
 $pwt = new postWidgetText();
 
@@ -66,7 +66,7 @@ $filter->js(dcCore::app()->adminurl->get('admin.plugin.postWidgetText')) . '
 
 dcPage::breadcrumb([
     __('Plugins')       => '',
-    __('Posts widgets') => ''
+    __('Posts widgets') => '',
 ]) .
 dcPage::notices();
 
