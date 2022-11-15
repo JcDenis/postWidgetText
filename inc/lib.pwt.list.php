@@ -71,7 +71,7 @@ class listPostWidgetText extends adminGenericList
                 !$this->rs->isEditable()
             ) . '</td>' .
             '<td class="maximal"><a href="' .
-                $this->core->getPostAdminURL(
+                dcCore::app()->getPostAdminURL(
                     $this->rs->post_type,
                     $this->rs->post_id
                 ) . '#post-wtext-form">' .

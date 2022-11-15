@@ -10,18 +10,18 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-$records = $core->con->select(
-    'SELECT W.*, P.post_lang, P.post_format FROM ' . $core->prefix . 'post_wtext W ' .
-    'LEFT JOIN ' . $core->prefix . 'post P ON P.post_id=W.post_id '
+$records = dcCore::app()->con->select(
+    'SELECT W.*, P.post_lang, P.post_format FROM ' . dcCore::app()->prefix . 'post_wtext W ' .
+    'LEFT JOIN ' . dcCore::app()->prefix . 'post P ON P.post_id=W.post_id '
 );
 if (!$records->isEmpty()) {
-    $cur = $core->con->openCursor($core->prefix . 'post_option');
+    $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post_option');
     while ($records->fetch()) {
-        $core->con->writeLock($core->prefix . 'post_option');
+        dcCore::app()->con->writeLock(dcCore::app()->prefix . 'post_option');
 
         try {
-            $id = $core->con->select(
-                'SELECT MAX(option_id) FROM ' . $core->prefix . 'post_option'
+            $id = dcCore::app()->con->select(
+                'SELECT MAX(option_id) FROM ' . dcCore::app()->prefix . 'post_option'
             )->f(0) + 1;
 
             $cur->clean();
@@ -38,9 +38,9 @@ if (!$records->isEmpty()) {
             $cur->option_content_xhtml = $records->wtext_content_xhtml;
 
             $cur->insert();
-            $core->con->unlock();
+            dcCore::app()->con->unlock();
         } catch (Exception $e) {
-            $core->con->unlock();
+            dcCore::app()->con->unlock();
 
             throw $e;
         }

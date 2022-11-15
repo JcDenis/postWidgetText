@@ -27,7 +27,7 @@ class adminPostWidgetText
         ];
     }
 
-    public static function adminFiltersLists(dcCore $core, $sorts)
+    public static function adminFiltersLists($sorts)
     {
         $sorts['pwt'] = [
             __('Post widget text'),
@@ -38,7 +38,7 @@ class adminPostWidgetText
         ];
     }
 
-    public static function adminBlogPreferencesForm(dcCore $core, dcSettings $blog_settings)
+    public static function adminBlogPreferencesForm(dcSettings $blog_settings)
     {
         echo '
         <div class="fieldset">
@@ -65,14 +65,14 @@ class adminPostWidgetText
         $blog_settings->postwidgettext->put('postwidgettext_importexport_active', !empty($_POST['importexport_active']));
     }
 
-    public static function adminDashboardFavorites(dcCore $core, $favs)
+    public static function adminDashboardFavorites(dcFavorites $favs)
     {
         $favs->register('postWidgetText', [
             'title'       => __('Post widget text'),
-            'url'         => $core->adminurl->get('admin.plugin.postWidgetText'),
+            'url'         => dcCore::app()->adminurl->get('admin.plugin.postWidgetText'),
             'small-icon'  => dcPage::getPF('postWidgetText/icon.png'),
             'large-icon'  => dcPage::getPF('postWidgetText/icon-big.png'),
-            'permissions' => $core->auth->check('usage,contentadmin', $core->blog->id),
+            'permissions' => dcCore::app()->auth->check('usage,contentadmin', dcCore::app()->blog->id),
             'active_cb'   => ['adminPostWidgetText', 'adminDashboardFavoritesActive']
         ]);
     }
@@ -92,11 +92,10 @@ class adminPostWidgetText
 
     public static function adminPostHeaders()
     {
-        global $core;
-        $editor = $core->auth->getOption('editor');
+        $editor = dcCore::app()->auth->getOption('editor');
 
         return
-            $core->callBehavior('adminPostEditor', $editor['xhtml'], 'pwt', ['#post_wtext'], 'xhtml') .
+            dcCore::app()->callBehavior('adminPostEditor', $editor['xhtml'], 'pwt', ['#post_wtext'], 'xhtml') .
             dcPage::jsLoad(dcPage::getPF('postWidgetText/js/post.js'));
     }
 
@@ -110,7 +109,7 @@ class adminPostWidgetText
         if ($post) {
             $post_id = (int) $post->post_id;
 
-            $pwt = new postWidgetText($GLOBALS['core']);
+            $pwt = new postWidgetText();
             $w   = $pwt->getWidgets(['post_id' => $post_id]);
 
             # Existing widget
@@ -145,7 +144,7 @@ class adminPostWidgetText
         $content = $_POST['post_wtext']  ?? '';
 
         # Object
-        $pwt = new postWidgetText($GLOBALS['core']);
+        $pwt = new postWidgetText();
 
         # Get existing widget
         $w = $pwt->getWidgets(['post_id' => $post_id]);
@@ -181,7 +180,7 @@ class adminPostWidgetText
         $post_id = (int) $post_id;
 
         # Object
-        $pwt = new postWidgetText($GLOBALS['core']);
+        $pwt = new postWidgetText();
 
         # Get existing widget
         $w = $pwt->getWidgets(['post_id' => $post_id]);
@@ -198,8 +197,8 @@ class adminPostWidgetText
             'postwidgettext',
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
-            'FROM ' . $core->prefix . 'post_option W ' .
-            'LEFT JOIN ' . $core->prefix . 'post P ' .
+            'FROM ' . dcCore::app()->prefix . 'post_option W ' .
+            'LEFT JOIN ' . dcCore::app()->prefix . 'post P ' .
             'ON P.post_id = W.post_id ' .
             "WHERE P.blog_id = '" . $blog_id . "' " .
             "AND W.option_type = 'postwidgettext' "
@@ -212,8 +211,8 @@ class adminPostWidgetText
             'postwidgettext',
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
-            'FROM ' . $core->prefix . 'post_option W ' .
-            'LEFT JOIN ' . $core->prefix . 'post P ' .
+            'FROM ' . dcCore::app()->prefix . 'post_option W ' .
+            'LEFT JOIN ' . dcCore::app()->prefix . 'post P ' .
             'ON P.post_id = W.post_id ' .
             "WHERE W.option_type = 'postwidgettext' "
         );
@@ -221,10 +220,10 @@ class adminPostWidgetText
 
     public static function importInit($bk, dcCore $core)
     {
-        $bk->cur_postwidgettext = $core->con->openCursor(
-            $core->prefix . 'post_option'
+        $bk->cur_postwidgettext = dcCore::app()->con->openCursor(
+            dcCore::app()->prefix . 'post_option'
         );
-        $bk->postwidgettext = new postWidgetText($core);
+        $bk->postwidgettext = new postWidgetText();
     }
 
     public static function importSingle($line, $bk, dcCore $core)

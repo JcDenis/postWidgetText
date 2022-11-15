@@ -18,10 +18,13 @@ $this->registerModule(
     'Post widget text',
     'Add a widget with a text related to an entry',
     'Jean-Christian Denis and Contributors',
-    '2021.11.06',
+    '2022.11.12',
     [
-        'requires'    => [['core', '2.20']],
-        'permissions' => 'usage,contentadmin',
+        'requires'    => [['core', '2.24']],
+        'permissions' => dcCore::app()->auth->makePermissions([
+            dcAuth::PERMISSION_USAGE,
+            dcAuth::PERMISSION_CONTENT_ADMIN,
+        ]),
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/postWidgetText',
         'details'     => 'https://plugins.dotaddict.org/dc2/details/postWidgetText',

@@ -14,9 +14,9 @@ if (!defined('DC_RC_PATH')) {
     return null;
 }
 
-$core->blog->settings->addNamespace('postwidgettext');
+dcCore::app()->blog->settings->addNamespace('postwidgettext');
 
-$core->addBehavior('initWidgets', ['postWidgetTextWidget', 'init']);
+dcCore::app()->addBehavior('initWidgets', ['postWidgetTextWidget', 'init']);
 
 /**
  * @ingroup DC_PLUGIN_POSTWIDGETTEXT
@@ -55,15 +55,13 @@ class postWidgetTextWidget
 
     public static function display($w)
     {
-        global $core, $_ctx;
-
         if ($w->offline) {
             return null;
         }
 
-        if (!$core->blog->settings->postwidgettext->postwidgettext_active
-            || !$_ctx->exists('posts')
-            || !$_ctx->posts->post_id
+        if (!dcCore::app()->blog->settings->postwidgettext->postwidgettext_active
+            || !dcCore::app()->ctx->exists('posts')
+            || !dcCore::app()->ctx->posts->post_id
         ) {
             return null;
         }
@@ -71,8 +69,8 @@ class postWidgetTextWidget
         $title   = $w->title ?: null;
         $content = '';
 
-        $pwt = new postWidgetText($core);
-        $rs  = $pwt->getWidgets(['post_id' => $_ctx->posts->post_id]);
+        $pwt = new postWidgetText();
+        $rs  = $pwt->getWidgets(['post_id' => dcCore::app()->ctx->posts->post_id]);
 
         if ($rs->isEmpty()) {
             return null;
@@ -85,7 +83,7 @@ class postWidgetTextWidget
             $content = $rs->option_content_xhtml;
         }
         if ('' == $content && $w->excerpt) {
-            $content = $_ctx->posts->post_excerpt_xhtml;
+            $content = dcCore::app()->ctx->posts->post_excerpt_xhtml;
         }
 
         return $w->renderDiv(

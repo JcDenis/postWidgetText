@@ -14,8 +14,8 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     return null;
 }
 
-$new_version = $core->plugins->moduleInfo('postWidgetText', 'version');
-$old_version = $core->getVersion('postWidgetText');
+$new_version = dcCore::app()->plugins->moduleInfo('postWidgetText', 'version');
+$old_version = dcCore::app()->getVersion('postWidgetText');
 
 if (version_compare($old_version, $new_version, '>=')) {
     return;
@@ -24,7 +24,7 @@ if (version_compare($old_version, $new_version, '>=')) {
 try {
     # Table is the same for plugins
     # pollsFactory, postTask, postWidgetText
-    $s = new dbStruct($core->con, $core->prefix);
+    $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
     $s->post_option
         ->option_id('bigint', 0, false)
         ->post_id('bigint', 0, false)
@@ -41,12 +41,12 @@ try {
         ->index('idx_post_option_post', 'btree', 'post_id')
         ->index('idx_post_option_type', 'btree', 'option_type');
 
-    $si      = new dbStruct($core->con, $core->prefix);
+    $si      = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
     $changes = $si->synchronize($s);
 
     # Settings
-    $core->blog->settings->addNamespace('postwidgettext');
-    $core->blog->settings->postwidgettext->put(
+    dcCore::app()->blog->settings->addNamespace('postwidgettext');
+    dcCore::app()->blog->settings->postwidgettext->put(
         'postwidgettext_active',
         true,
         'boolean',
@@ -54,7 +54,7 @@ try {
         false,
         true
     );
-    $core->blog->settings->postwidgettext->put(
+    dcCore::app()->blog->settings->postwidgettext->put(
         'postwidgettext_importexport_active',
         true,
         'boolean',
@@ -64,18 +64,18 @@ try {
     );
 
     # Transfert records from old table to the new one
-    if ($core->getVersion('postWidgetText') !== null
-     && version_compare($core->getVersion('postWidgetText'), '0.5', '<')
+    if (dcCore::app()->getVersion('postWidgetText') !== null
+     && version_compare(dcCore::app()->getVersion('postWidgetText'), '0.5', '<')
     ) {
-        require_once dirname(__FILE__) . '/inc/patch.0.5.php';
+        require_once __DIR__ . '/inc/patch.0.5.php';
     }
 
     # Set module version
-    $core->setVersion('postWidgetText', $new_version);
+    dcCore::app()->setVersion('postWidgetText', $new_version);
 
     return true;
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 return false;
