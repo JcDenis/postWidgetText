@@ -1,5 +1,5 @@
-dev
-- ...
+2022.11.20
+- fix compatibility with Dotclear 2.24 (required)
 
 2021.11.06
 - fix error on empty record on widget

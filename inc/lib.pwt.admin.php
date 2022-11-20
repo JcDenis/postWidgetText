@@ -72,8 +72,11 @@ class adminPostWidgetText
             'url'         => dcCore::app()->adminurl->get('admin.plugin.postWidgetText'),
             'small-icon'  => dcPage::getPF('postWidgetText/icon.png'),
             'large-icon'  => dcPage::getPF('postWidgetText/icon-big.png'),
-            'permissions' => dcCore::app()->auth->check('usage,contentadmin', dcCore::app()->blog->id),
-            'active_cb'   => ['adminPostWidgetText', 'adminDashboardFavoritesActive'],
+            'permissions' => dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+                dcAuth::PERMISSION_USAGE,
+                dcAuth::PERMISSION_CONTENT_ADMIN,
+            ]), dcCore::app()->blog->id),
+            'active_cb' => ['adminPostWidgetText', 'adminDashboardFavoritesActive'],
         ]);
     }
 
