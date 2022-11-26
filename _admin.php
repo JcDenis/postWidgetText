@@ -21,7 +21,7 @@ if (dcCore::app()->blog->settings->postwidgettext->postwidgettext_active) {
     dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
         __('Post widget text'),
         dcCore::app()->adminurl->get('admin.plugin.postWidgetText'),
-        dcPage::getPF('postWidgetText/icon.png'),
+        dcPage::getPF('postWidgetText/icon.svg'),
         preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.postWidgetText')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
         dcCore::app()->auth->check(dcAuth::PERMISSION_CONTENT_ADMIN, dcCore::app()->blog->id)
     );

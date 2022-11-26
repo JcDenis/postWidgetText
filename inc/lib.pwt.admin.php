@@ -70,27 +70,13 @@ class adminPostWidgetText
         $favs->register('postWidgetText', [
             'title'       => __('Post widget text'),
             'url'         => dcCore::app()->adminurl->get('admin.plugin.postWidgetText'),
-            'small-icon'  => dcPage::getPF('postWidgetText/icon.png'),
-            'large-icon'  => dcPage::getPF('postWidgetText/icon-big.png'),
+            'small-icon'  => dcPage::getPF('postWidgetText/icon.svg'),
+            'large-icon'  => dcPage::getPF('postWidgetText/icon.svg'),
             'permissions' => dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
                 dcAuth::PERMISSION_USAGE,
                 dcAuth::PERMISSION_CONTENT_ADMIN,
             ]), dcCore::app()->blog->id),
-            'active_cb' => ['adminPostWidgetText', 'adminDashboardFavoritesActive'],
         ]);
-    }
-
-    /**
-     * Favorites selection.
-     *
-     * @param    string $request Requested page
-     * @param    array  $params  Requested parameters
-     */
-    public static function adminDashboardFavoritesActive($request, $params)
-    {
-        return $request == 'plugin.php'
-            && isset($params['p'])
-            && $params['p'] == 'postWidgetText';
     }
 
     public static function adminPostHeaders()
