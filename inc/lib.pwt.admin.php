@@ -186,8 +186,8 @@ class adminPostWidgetText
             'postwidgettext',
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
-            'FROM ' . dcCore::app()->prefix . 'post_option W ' .
-            'LEFT JOIN ' . dcCore::app()->prefix . 'post P ' .
+            'FROM ' . dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME . ' W ' .
+            'LEFT JOIN ' . dcCore::app()->prefix . dcBlog::POST_TABLE_NAME . ' P ' .
             'ON P.post_id = W.post_id ' .
             "WHERE P.blog_id = '" . $blog_id . "' " .
             "AND W.option_type = 'postwidgettext' "
@@ -200,8 +200,8 @@ class adminPostWidgetText
             'postwidgettext',
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
-            'FROM ' . dcCore::app()->prefix . 'post_option W ' .
-            'LEFT JOIN ' . dcCore::app()->prefix . 'post P ' .
+            'FROM ' . dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME . ' W ' .
+            'LEFT JOIN ' . dcCore::app()->prefix . dcBlog::POST_TABLE_NAME . ' P ' .
             'ON P.post_id = W.post_id ' .
             "WHERE W.option_type = 'postwidgettext' "
         );
@@ -210,7 +210,7 @@ class adminPostWidgetText
     public static function importInit($bk, dcCore $core)
     {
         $bk->cur_postwidgettext = dcCore::app()->con->openCursor(
-            dcCore::app()->prefix . 'post_option'
+            dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME
         );
         $bk->postwidgettext = new postWidgetText();
     }

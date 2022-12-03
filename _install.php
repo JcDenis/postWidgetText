@@ -14,18 +14,19 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     return null;
 }
 
-$new_version = dcCore::app()->plugins->moduleInfo('postWidgetText', 'version');
-$old_version = dcCore::app()->getVersion('postWidgetText');
-
-if (version_compare($old_version, $new_version, '>=')) {
-    return;
-}
-
 try {
+    # Grab info
+    $mod_id = basename(__DIR__);
+
+    # check installed version
+    if (version_compare(dcCore::app()->getVersion($mod_id), $new_version, '>=')) {
+        return;
+    }
+
     # Table is the same for plugins
     # pollsFactory, postTask, postWidgetText
     $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
-    $s->post_option
+    $s->{initPostWidgetText::PWT_TABLE_NAME}
         ->option_id('bigint', 0, false)
         ->post_id('bigint', 0, false)
         ->option_creadt('timestamp', 0, false, 'now()')
@@ -64,14 +65,14 @@ try {
     );
 
     # Transfert records from old table to the new one
-    if (dcCore::app()->getVersion('postWidgetText') !== null
-     && version_compare(dcCore::app()->getVersion('postWidgetText'), '0.5', '<')
+    if (dcCore::app()->getVersion($mod_id) !== null
+     && version_compare(dcCore::app()->getVersion($mod_id), '0.5', '<')
     ) {
         require_once __DIR__ . '/inc/patch.0.5.php';
     }
 
     # Set module version
-    dcCore::app()->setVersion('postWidgetText', $new_version);
+    dcCore::app()->setVersion($mod_id, $new_version);
 
     return true;
 } catch (Exception $e) {

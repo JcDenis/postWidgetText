@@ -12,16 +12,16 @@
  */
 $records = dcCore::app()->con->select(
     'SELECT W.*, P.post_lang, P.post_format FROM ' . dcCore::app()->prefix . 'post_wtext W ' .
-    'LEFT JOIN ' . dcCore::app()->prefix . 'post P ON P.post_id=W.post_id '
+    'LEFT JOIN ' . dcCore::app()->prefix . dcBlog::POST_TABLE_NAME . ' P ON P.post_id=W.post_id '
 );
 if (!$records->isEmpty()) {
-    $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post_option');
+    $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME);
     while ($records->fetch()) {
-        dcCore::app()->con->writeLock(dcCore::app()->prefix . 'post_option');
+        dcCore::app()->con->writeLock(dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME);
 
         try {
             $id = dcCore::app()->con->select(
-                'SELECT MAX(option_id) FROM ' . dcCore::app()->prefix . 'post_option'
+                'SELECT MAX(option_id) FROM ' . dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME
             )->f(0) + 1;
 
             $cur->clean();

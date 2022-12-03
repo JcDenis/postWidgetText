@@ -28,7 +28,7 @@ class postWidgetText
     public function __construct()
     {
         $this->con   = dcCore::app()->con;
-        $this->table = dcCore::app()->prefix . 'post_option';
+        $this->table = dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME;
         $this->blog  = dcCore::app()->con->escape(dcCore::app()->blog->id);
     }
 
