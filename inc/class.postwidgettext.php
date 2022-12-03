@@ -153,7 +153,7 @@ class postWidgetText
 
         $cur->option_upddt = date('Y-m-d H:i:s');
 
-        if (!dcCore::app()->auth->check(dcAuth::PERMISSION_CONTENT_ADMIN, $this->blog)) {
+        if (!dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), $this->blog)) {
             $params['option_id']  = $id;
             $params['user_id']    = $this->con->escape(dcCore::app()->auth->userID());
             $params['no_content'] = true;
@@ -185,7 +185,7 @@ class postWidgetText
             throw new Exception(__('No such ID'));
         }
 
-        if (!dcCore::app()->auth->check(dcAuth::PERMISSION_CONTENT_ADMIN, $this->blog)) {
+        if (!dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), $this->blog)) {
             $params['option_id']  = $id;
             $params['user_id']    = $this->con->escape(dcCore::app()->auth->userID());
             $params['no_content'] = true;

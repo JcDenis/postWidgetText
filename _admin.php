@@ -23,7 +23,7 @@ if (dcCore::app()->blog->settings->postwidgettext->postwidgettext_active) {
         dcCore::app()->adminurl->get('admin.plugin.postWidgetText'),
         dcPage::getPF('postWidgetText/icon.svg'),
         preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.postWidgetText')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-        dcCore::app()->auth->check(dcAuth::PERMISSION_CONTENT_ADMIN, dcCore::app()->blog->id)
+        dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
     );
 
     dcCore::app()->addBehavior('adminDashboardFavoritesV2', ['adminPostWidgetText', 'adminDashboardFavorites']);

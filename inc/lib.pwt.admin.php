@@ -72,10 +72,10 @@ class adminPostWidgetText
             'url'         => dcCore::app()->adminurl->get('admin.plugin.postWidgetText'),
             'small-icon'  => dcPage::getPF('postWidgetText/icon.svg'),
             'large-icon'  => dcPage::getPF('postWidgetText/icon.svg'),
-            'permissions' => dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+            'permissions' => dcCore::app()->auth->makePermissions([
                 dcAuth::PERMISSION_USAGE,
                 dcAuth::PERMISSION_CONTENT_ADMIN,
-            ]), dcCore::app()->blog->id),
+            ]),
         ]);
     }
 
