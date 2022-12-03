@@ -14,8 +14,8 @@ if (!defined('DC_RC_PATH')) {
     return null;
 }
 
-$d = dirname(__FILE__) . '/inc/';
-
-$__autoload['postWidgetText']      = $d . 'class.postwidgettext.php';
-$__autoload['adminPostWidgetText'] = $d . 'lib.pwt.admin.php';
-$__autoload['listPostWidgetText']  = $d . 'lib.pwt.list.php';
+Clearbricks::lib()->autoload([
+    'postWidgetText'      => __DIR__ . '/inc/class.postwidgettext.php',
+    'adminPostWidgetText' => __DIR__ . '/inc/lib.pwt.admin.php',
+    'listPostWidgetText'  => __DIR__ . '/inc/lib.pwt.list.php',
+]);
