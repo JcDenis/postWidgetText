@@ -19,8 +19,12 @@ try {
     $mod_id = basename(__DIR__);
 
     # check installed version
-    if (version_compare(dcCore::app()->getVersion($mod_id), $new_version, '>=')) {
-        return;
+    if (version_compare(
+        dcCore::app()->getVersion($mod_id),
+        dcCore::app()->plugins->moduleInfo($mod_id, 'version'),
+        '>='
+    )) {
+        return null;
     }
 
     # Table is the same for plugins
@@ -70,9 +74,6 @@ try {
     ) {
         require_once __DIR__ . '/inc/patch.0.5.php';
     }
-
-    # Set module version
-    dcCore::app()->setVersion($mod_id, $new_version);
 
     return true;
 } catch (Exception $e) {
