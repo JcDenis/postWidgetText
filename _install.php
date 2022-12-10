@@ -15,14 +15,10 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 }
 
 try {
-    # Grab info
-    $mod_id = basename(__DIR__);
-
     # check installed version
-    if (version_compare(
-        dcCore::app()->getVersion($mod_id),
-        dcCore::app()->plugins->moduleInfo($mod_id, 'version'),
-        '>='
+    if (!dcCore::app()->newVersion(
+        basename(__DIR__), 
+        dcCore::app()->plugins->moduleInfo(basename(__DIR__), 'version')
     )) {
         return null;
     }
@@ -69,8 +65,8 @@ try {
     );
 
     # Transfert records from old table to the new one
-    if (dcCore::app()->getVersion($mod_id) !== null
-     && version_compare(dcCore::app()->getVersion($mod_id), '0.5', '<')
+    if (dcCore::app()->getVersion(basename(__DIR__)) !== null
+     && version_compare(dcCore::app()->getVersion(basename(__DIR__)), '0.5', '<')
     ) {
         require_once __DIR__ . '/inc/patch.0.5.php';
     }
