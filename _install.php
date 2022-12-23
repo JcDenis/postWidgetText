@@ -15,7 +15,7 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 }
 
 try {
-    # check installed version
+    // check installed version
     if (!dcCore::app()->newVersion(
         basename(__DIR__), 
         dcCore::app()->plugins->moduleInfo(basename(__DIR__), 'version')
@@ -23,8 +23,7 @@ try {
         return null;
     }
 
-    # Table is the same for plugins
-    # pollsFactory, postTask, postWidgetText
+    // Table is the same for plugins pollsFactory, postTask, postWidgetText
     $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
     $s->{initPostWidgetText::PWT_TABLE_NAME}
         ->option_id('bigint', 0, false)
@@ -45,24 +44,45 @@ try {
     $si      = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
     $changes = $si->synchronize($s);
 
-    # Settings
-    dcCore::app()->blog->settings->addNamespace('postwidgettext');
-    dcCore::app()->blog->settings->postwidgettext->put(
-        'postwidgettext_active',
-        true,
-        'boolean',
-        'post widget text plugin enabled',
-        false,
-        true
-    );
-    dcCore::app()->blog->settings->postwidgettext->put(
-        'postwidgettext_importexport_active',
-        true,
-        'boolean',
-        'activate import/export behaviors',
-        false,
-        true
-    );
+    $current = dcCore::app()->getVersion(basename(__DIR__));
+
+    // Update settings id, ns
+    if ($current && version_compare($current, '2022.12.23', '<=')) {
+        $record = dcCore::app()->con->select(
+            'SELECT * FROM ' . dcCore::app()->prefix . dcNamespace::NS_TABLE_NAME . ' ' .
+            "WHERE setting_ns = 'postwidgettext' "
+        );
+
+        while ($record->fetch()) {
+            if (preg_match('/^postwidgettext_(.*?)$/', $record->setting_id, $match)) {
+                $cur             = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcNamespace::NS_TABLE_NAME);
+                $cur->setting_id = $match[1];
+                $cur->setting_ns = basename(__DIR__);
+                $cur->update(
+                    "WHERE setting_id = '" . $record->setting_id . "' and setting_ns = 'postwidgettext' " .
+                    'AND blog_id ' . (null === $record->blog_id ? 'IS NULL ' : ("= '" . dcCore::app()->con->escape($record->blog_id) . "' "))
+                );
+            }
+        }
+    } else {
+        // Settings
+        dcCore::app()->blog->settings->get(basename(__DIR__))->put(
+            'active',
+            true,
+            'boolean',
+            'post widget text plugin enabled',
+            false,
+            true
+        );
+        dcCore::app()->blog->settings->get(basename(__DIR__))->put(
+            'importexport_active',
+            true,
+            'boolean',
+            'activate import/export behaviors',
+            false,
+            true
+        );
+    }
 
     # Transfert records from old table to the new one
     if (dcCore::app()->getVersion(basename(__DIR__)) !== null

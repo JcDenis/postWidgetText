@@ -83,7 +83,7 @@ class postWidgetText
         if (isset($params['option_type'])) {
             $params['sql'] .= "AND W.option_type = '" . $this->con->escape($params['option_type']) . "' ";
         } else {
-            $params['sql'] .= "AND W.option_type = 'postwidgettext' ";
+            $params['sql'] .= "AND W.option_type = '" . $this->con->escape(basename(__DIR__)) . "' ";
         }
         unset($params['option_type']);
         if (!isset($params['post_type'])) {
@@ -170,7 +170,7 @@ class postWidgetText
         $this->triggerBlog();
     }
 
-    public function delWidget($id, $type = 'postwidgettext')
+    public function delWidget($id, $type = '')
     {
         if (!dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_DELETE,
@@ -179,7 +179,8 @@ class postWidgetText
             throw new Exception(__('You are not allowed to delete entries text widget'));
         }
 
-        $id = (int) $id;
+        $id   = (int) $id;
+        $type = $type ?? basename(__DIR__);
 
         if (empty($id)) {
             throw new Exception(__('No such ID'));

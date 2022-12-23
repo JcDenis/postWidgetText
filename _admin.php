@@ -17,20 +17,20 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 require __DIR__ . '/_widgets.php';
 
 # Admin menu
-if (dcCore::app()->blog->settings->postwidgettext->postwidgettext_active) {
+if (dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')) {
     dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
         __('Post widget text'),
-        dcCore::app()->adminurl->get('admin.plugin.postWidgetText'),
-        dcPage::getPF('postWidgetText/icon.svg'),
-        preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.postWidgetText')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+        dcCore::app()->adminurl->get('admin.plugin.' . basename(__DIR__)),
+        dcPage::getPF(basename(__DIR__) . '/icon.svg'),
+        preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . basename(__DIR__))) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
         dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
     );
 
     dcCore::app()->addBehavior('adminDashboardFavoritesV2', ['adminPostWidgetText', 'adminDashboardFavorites']);
 }
 # Pref
-dcCore::app()->addBehavior('adminFiltersListsV2', ['adminPostWidgetText', 'adminFiltersLists']);
-dcCore::app()->addBehavior('adminBlogPreferencesFormV2', ['adminPostWidgetText', 'adminBlogPreferencesForm']);
+dcCore::app()->addBehavior('adminFiltersListsV2', ['adminPostWidgetText', 'adminFiltersListsV2']);
+dcCore::app()->addBehavior('adminBlogPreferencesFormV2', ['adminPostWidgetText', 'adminBlogPreferencesFormV2']);
 dcCore::app()->addBehavior('adminBeforeBlogSettingsUpdate', ['adminPostWidgetText', 'adminBeforeBlogSettingsUpdate']);
 
 # Post
@@ -48,10 +48,10 @@ dcCore::app()->addBehavior('adminAfterPageCreate', ['adminPostWidgetText', 'admi
 dcCore::app()->addBehavior('adminBeforePageDelete', ['adminPostWidgetText', 'adminBeforePostDelete']);
 
 # Plugin "importExport"
-if (dcCore::app()->blog->settings->postwidgettext->postwidgettext_importexport_active) {
-    dcCore::app()->addBehavior('exportFull', ['adminPostWidgetText', 'exportFull']);
-    dcCore::app()->addBehavior('exportSingle', ['adminPostWidgetText', 'exportSingle']);
-    dcCore::app()->addBehavior('importInit', ['adminPostWidgetText', 'importInit']);
-    dcCore::app()->addBehavior('importSingle', ['adminPostWidgetText', 'importSingle']);
-    dcCore::app()->addBehavior('importFull', ['adminPostWidgetText', 'importFull']);
+if (dcCore::app()->blog->settings->get(basename(__DIR__))->get('importexport_active')) {
+    dcCore::app()->addBehavior('exportFullV2', ['adminPostWidgetText', 'exportFullV2']);
+    dcCore::app()->addBehavior('exportSingleV2', ['adminPostWidgetText', 'exportSingleV2']);
+    dcCore::app()->addBehavior('importInitV2', ['adminPostWidgetText', 'importInitV2']);
+    dcCore::app()->addBehavior('importSingleV2', ['adminPostWidgetText', 'importSingleV2']);
+    dcCore::app()->addBehavior('importFullV2', ['adminPostWidgetText', 'importFullV2']);
 }

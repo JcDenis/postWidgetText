@@ -14,8 +14,6 @@ if (!defined('DC_RC_PATH')) {
     return null;
 }
 
-dcCore::app()->blog->settings->addNamespace('postwidgettext');
-
 dcCore::app()->addBehavior('initWidgets', ['postWidgetTextWidget', 'init']);
 
 /**
@@ -29,7 +27,7 @@ class postWidgetTextWidget
     {
         $w
             ->create(
-                'postwidgettext',
+                basename(__DIR__),
                 __('Post widget text'),
                 ['postWidgetTextWidget', 'display'],
                 null,
@@ -59,7 +57,7 @@ class postWidgetTextWidget
             return null;
         }
 
-        if (!dcCore::app()->blog->settings->postwidgettext->postwidgettext_active
+        if (!dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')
             || !dcCore::app()->ctx->exists('posts')
             || !dcCore::app()->ctx->posts->post_id
         ) {
@@ -88,7 +86,7 @@ class postWidgetTextWidget
 
         return $w->renderDiv(
             $w->content_only,
-            'postwidgettext ' . $w->class,
+            basename(__DIR__) . ' ' . $w->class,
             '',
             ($title ? $w->renderTitle(html::escapeHTML($title)) : '') . $content
         );

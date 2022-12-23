@@ -17,6 +17,11 @@
  */
 class adminPostWidgetText
 {
+    private static function id()
+    {
+        return basename(dirname(__DIR__));
+    }
+
     public static function sortbyCombo()
     {
         return [
@@ -27,7 +32,7 @@ class adminPostWidgetText
         ];
     }
 
-    public static function adminFiltersLists($sorts)
+    public static function adminFiltersListsV2($sorts)
     {
         $sorts['pwt'] = [
             __('Post widget text'),
@@ -38,7 +43,7 @@ class adminPostWidgetText
         ];
     }
 
-    public static function adminBlogPreferencesForm(dcSettings $blog_settings)
+    public static function adminBlogPreferencesFormV2(dcSettings $blog_settings)
     {
         echo '
         <div class="fieldset">
@@ -46,12 +51,12 @@ class adminPostWidgetText
         <div class="two-cols">
         <div class="col">
         <p><label for="active">' .
-        form::checkbox('active', 1, (bool) $blog_settings->postwidgettext->postwidgettext_active) .
+        form::checkbox('active', 1, (bool) $blog_settings->get(self::id())->get('active')) .
         __('Enable post widget text on this blog') . '</label></p>
         </div>
         <div class="col">
         <p><label for="importexport_active">' .
-        form::checkbox('importexport_active', 1, (bool) $blog_settings->postwidgettext->postwidgettext_importexport_active) .
+        form::checkbox('importexport_active', 1, (bool) $blog_settings->get(self::id())->get('importexport_active')) .
         __('Enable import/export behaviors') . '</label></p>
         </div>
         </div>
@@ -61,17 +66,17 @@ class adminPostWidgetText
 
     public static function adminBeforeBlogSettingsUpdate(dcSettings $blog_settings)
     {
-        $blog_settings->postwidgettext->put('postwidgettext_active', !empty($_POST['active']));
-        $blog_settings->postwidgettext->put('postwidgettext_importexport_active', !empty($_POST['importexport_active']));
+        $blog_settings->get(self::id())->put('active', !empty($_POST['active']));
+        $blog_settings->get(self::id())->put('importexport_active', !empty($_POST['importexport_active']));
     }
 
-    public static function adminDashboardFavorites(dcFavorites $favs)
+    public static function adminDashboardFavoritesV2(dcFavorites $favs)
     {
-        $favs->register('postWidgetText', [
+        $favs->register(self::id(), [
             'title'       => __('Post widget text'),
-            'url'         => dcCore::app()->adminurl->get('admin.plugin.postWidgetText'),
-            'small-icon'  => dcPage::getPF('postWidgetText/icon.svg'),
-            'large-icon'  => dcPage::getPF('postWidgetText/icon.svg'),
+            'url'         => dcCore::app()->adminurl->get('admin.plugin.' . self::id()),
+            'small-icon'  => dcPage::getPF(self::id() . '/icon.svg'),
+            'large-icon'  => dcPage::getPF(self::id() . '/icon.svg'),
             'permissions' => dcCore::app()->auth->makePermissions([
                 dcAuth::PERMISSION_USAGE,
                 dcAuth::PERMISSION_CONTENT_ADMIN,
@@ -85,7 +90,7 @@ class adminPostWidgetText
 
         return
             dcCore::app()->callBehavior('adminPostEditor', $editor['xhtml'], 'pwt', ['#post_wtext'], 'xhtml') .
-            dcPage::jsLoad(dcPage::getPF('postWidgetText/js/post.js'));
+            dcPage::jsModuleLoad(self::id() . '/js/post.js');
     }
 
     public static function adminPostFormItems($main, $sidebar, $post)
@@ -147,7 +152,7 @@ class adminPostWidgetText
         if (!empty($title) || !empty($content)) {
             $wcur                 = $pwt->openCursor();
             $wcur->post_id        = $post_id;
-            $wcur->option_type    = 'postwidgettext';
+            $wcur->option_type    = self::id();
             $wcur->option_lang    = $cur->post_lang;
             $wcur->option_format  = $cur->post_format;
             $wcur->option_title   = $title;
@@ -180,49 +185,49 @@ class adminPostWidgetText
         }
     }
 
-    public static function exportSingle(dcCore $core, $exp, $blog_id)
+    public static function exportSingleV2($exp, $blog_id)
     {
         $exp->export(
-            'postwidgettext',
+            self::id(),
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
             'FROM ' . dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME . ' W ' .
             'LEFT JOIN ' . dcCore::app()->prefix . dcBlog::POST_TABLE_NAME . ' P ' .
             'ON P.post_id = W.post_id ' .
             "WHERE P.blog_id = '" . $blog_id . "' " .
-            "AND W.option_type = 'postwidgettext' "
+            "AND W.option_type = '" . dcCore::app()->con->escape(self::id()) . "' "
         );
     }
 
-    public static function exportFull(dcCore $core, $exp)
+    public static function exportFullV2($exp)
     {
         $exp->export(
-            'postwidgettext',
+            self::id(),
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
             'FROM ' . dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME . ' W ' .
             'LEFT JOIN ' . dcCore::app()->prefix . dcBlog::POST_TABLE_NAME . ' P ' .
             'ON P.post_id = W.post_id ' .
-            "WHERE W.option_type = 'postwidgettext' "
+            "WHERE W.option_type = '" . dcCore::app()->con->escape(self::id()) . "' "
         );
     }
 
-    public static function importInit($bk, dcCore $core)
+    public static function importInitV2($bk)
     {
         $bk->cur_postwidgettext = dcCore::app()->con->openCursor(
             dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME
         );
-        $bk->postwidgettext = new postWidgetText();
+        $bk->{self::id()} = new postWidgetText();
     }
 
-    public static function importSingle($line, $bk, dcCore $core)
+    public static function importSingleV2($line, $bk)
     {
-        if ($line->__name == 'postwidgettext'
+        if ($line->__name == self::id()
          && isset($bk->old_ids['post'][(int) $line->post_id])
         ) {
             $line->post_id = $bk->old_ids['post'][(int) $line->post_id];
 
-            $exists = $bk->postwidgettext->getWidgets([
+            $exists = $bk->{self::id()}->getWidgets([
                 'post_id' => $line->post_id,
             ]);
 
@@ -236,17 +241,17 @@ class adminPostWidgetText
                 $bk->cur_postwidgettext->option_content       = (string) $line->option_content;
                 $bk->cur_postwidgettext->option_content_xhtml = (string) $line->option_content_xhtml;
 
-                $bk->postwidgettext->addWidget(
+                $bk->{self::id()}->addWidget(
                     $bk->cur_postwidgettext
                 );
             }
         }
     }
 
-    public static function importFull($line, $bk, dcCore $core)
+    public static function importFullV2($line, $bk)
     {
-        if ($line->__name == 'postwidgettext') {
-            $exists = $bk->postwidgettext->getWidgets([
+        if ($line->__name == self::id()) {
+            $exists = $bk->{self::id()}->getWidgets([
                 'post_id' => $line->post_id,
             ]);
 
@@ -260,7 +265,7 @@ class adminPostWidgetText
                 $bk->cur_postwidgettext->option_content       = (string) $line->option_content;
                 $bk->cur_postwidgettext->option_content_xhtml = (string) $line->option_content_xhtml;
 
-                $bk->postwidgettext->addWidget(
+                $bk->{self::id()}->addWidget(
                     $bk->cur_postwidgettext
                 );
             }
