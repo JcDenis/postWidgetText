@@ -53,11 +53,8 @@ class postWidgetTextWidget
 
     public static function display($w)
     {
-        if ($w->offline) {
-            return null;
-        }
-
-        if (!dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')
+        if ($w->offline
+            || !dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')
             || !dcCore::app()->ctx->exists('posts')
             || !dcCore::app()->ctx->__get('posts')->post_id
         ) {

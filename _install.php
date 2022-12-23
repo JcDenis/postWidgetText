@@ -24,8 +24,8 @@ try {
     }
 
     // Table is the same for plugins pollsFactory, postTask, postWidgetText
-    $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
-    $s->{initPostWidgetText::PWT_TABLE_NAME}
+    $st = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
+    $st->{initPostWidgetText::PWT_TABLE_NAME}
         ->option_id('bigint', 0, false)
         ->post_id('bigint', 0, false)
         ->option_creadt('timestamp', 0, false, 'now()')
@@ -42,7 +42,7 @@ try {
         ->index('idx_post_option_type', 'btree', 'option_type');
 
     $si      = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
-    $changes = $si->synchronize($s);
+    $changes = $si->synchronize($st);
 
     $current = dcCore::app()->getVersion(basename(__DIR__));
 
