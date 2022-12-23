@@ -103,8 +103,6 @@ class postWidgetText
         }
         if ($cur->post_id == '') {
             throw new Exception('No such entry ID');
-
-            return null;
         }
 
         $this->lockTable();
@@ -179,8 +177,8 @@ class postWidgetText
             throw new Exception(__('You are not allowed to delete entries text widget'));
         }
 
-        $id   = (int) $id;
-        $type = $type ?? basename(__DIR__);
+        $id = (int) $id;
+        $type ??= basename(__DIR__);
 
         if (empty($id)) {
             throw new Exception(__('No such ID'));

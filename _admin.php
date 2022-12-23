@@ -26,7 +26,7 @@ if (dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')) {
         dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
     );
 
-    dcCore::app()->addBehavior('adminDashboardFavoritesV2', ['adminPostWidgetText', 'adminDashboardFavorites']);
+    dcCore::app()->addBehavior('adminDashboardFavoritesV2', ['adminPostWidgetText', 'adminDashboardFavoritesV2']);
 }
 # Pref
 dcCore::app()->addBehavior('adminFiltersListsV2', ['adminPostWidgetText', 'adminFiltersListsV2']);

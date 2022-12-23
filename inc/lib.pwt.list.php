@@ -47,13 +47,13 @@ class listPostWidgetText extends adminGenericList
         while ($this->rs->fetch()) {
             $w_title = html::escapeHTML($this->rs->option_title);
             if ($w_title == '') {
-                $w_title = '<em>' . context::global_filter(
+                $w_title = '<em>' . context::global_filters(
                     $this->rs->option_content,
-                    1,
-                    1,
-                    80,
-                    0,
-                    0
+                    [
+                        'encode_xml',
+                        'remove_html',
+                        'cut_string' => 80,
+                    ]
                 ) . '</em>';
             }
 

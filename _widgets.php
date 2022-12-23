@@ -59,7 +59,7 @@ class postWidgetTextWidget
 
         if (!dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')
             || !dcCore::app()->ctx->exists('posts')
-            || !dcCore::app()->ctx->posts->post_id
+            || !dcCore::app()->ctx->__get('posts')->post_id
         ) {
             return null;
         }
@@ -68,7 +68,7 @@ class postWidgetTextWidget
         $content = '';
 
         $pwt = new postWidgetText();
-        $rs  = $pwt->getWidgets(['post_id' => dcCore::app()->ctx->posts->post_id]);
+        $rs  = $pwt->getWidgets(['post_id' => dcCore::app()->ctx->__get('posts')->post_id]);
 
         if ($rs->isEmpty()) {
             return null;
@@ -81,7 +81,7 @@ class postWidgetTextWidget
             $content = $rs->option_content_xhtml;
         }
         if ('' == $content && $w->excerpt) {
-            $content = dcCore::app()->ctx->posts->post_excerpt_xhtml;
+            $content = dcCore::app()->ctx->__get('posts')->post_excerpt_xhtml;
         }
 
         return $w->renderDiv(

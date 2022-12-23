@@ -17,6 +17,9 @@
  */
 class adminPostWidgetText
 {
+    private static $ie_cursor;
+    private static $ie_pwt;
+
     private static function id()
     {
         return basename(dirname(__DIR__));
@@ -214,10 +217,10 @@ class adminPostWidgetText
 
     public static function importInitV2($bk)
     {
-        $bk->cur_postwidgettext = dcCore::app()->con->openCursor(
+        self::$ie_cursor = dcCore::app()->con->openCursor(
             dcCore::app()->prefix . initPostWidgetText::PWT_TABLE_NAME
         );
-        $bk->{self::id()} = new postWidgetText();
+        self::$ie_pwt = new postWidgetText();
     }
 
     public static function importSingleV2($line, $bk)
@@ -227,22 +230,22 @@ class adminPostWidgetText
         ) {
             $line->post_id = $bk->old_ids['post'][(int) $line->post_id];
 
-            $exists = $bk->{self::id()}->getWidgets([
+            $exists = self::$ie_pwt->getWidgets([
                 'post_id' => $line->post_id,
             ]);
 
             if ($exists->isEmpty()) {
-                $bk->cur_postwidgettext->clean();
+                self::$ie_cursor->clean();
 
-                $bk->cur_postwidgettext->post_id              = (int) $line->post_id;
-                $bk->cur_postwidgettext->option_type          = (string) $line->option_type;
-                $bk->cur_postwidgettext->option_lang          = (string) $line->option_lang;
-                $bk->cur_postwidgettext->option_format        = (string) $line->option_format;
-                $bk->cur_postwidgettext->option_content       = (string) $line->option_content;
-                $bk->cur_postwidgettext->option_content_xhtml = (string) $line->option_content_xhtml;
+                self::$ie_cursor->post_id              = (int) $line->post_id;
+                self::$ie_cursor->option_type          = (string) $line->option_type;
+                self::$ie_cursor->option_lang          = (string) $line->option_lang;
+                self::$ie_cursor->option_format        = (string) $line->option_format;
+                self::$ie_cursor->option_content       = (string) $line->option_content;
+                self::$ie_cursor->option_content_xhtml = (string) $line->option_content_xhtml;
 
-                $bk->{self::id()}->addWidget(
-                    $bk->cur_postwidgettext
+                self::$ie_pwt->addWidget(
+                    self::$ie_cursor
                 );
             }
         }
@@ -251,22 +254,22 @@ class adminPostWidgetText
     public static function importFullV2($line, $bk)
     {
         if ($line->__name == self::id()) {
-            $exists = $bk->{self::id()}->getWidgets([
+            $exists = self::$ie_pwt->getWidgets([
                 'post_id' => $line->post_id,
             ]);
 
             if ($exists->isEmpty()) {
-                $bk->cur_postwidgettext->clean();
+                self::$ie_cursor->clean();
 
-                $bk->cur_postwidgettext->post_id              = (int) $line->post_id;
-                $bk->cur_postwidgettext->option_type          = (string) $line->option_type;
-                $bk->cur_postwidgettext->option_format        = (string) $line->option_format;
-                $bk->cur_postwidgettext->option_content       = (string) $line->option_content;
-                $bk->cur_postwidgettext->option_content       = (string) $line->option_content;
-                $bk->cur_postwidgettext->option_content_xhtml = (string) $line->option_content_xhtml;
+                self::$ie_cursor->post_id              = (int) $line->post_id;
+                self::$ie_cursor->option_type          = (string) $line->option_type;
+                self::$ie_cursor->option_format        = (string) $line->option_format;
+                self::$ie_cursor->option_content       = (string) $line->option_content;
+                self::$ie_cursor->option_content       = (string) $line->option_content;
+                self::$ie_cursor->option_content_xhtml = (string) $line->option_content_xhtml;
 
-                $bk->{self::id()}->addWidget(
-                    $bk->cur_postwidgettext
+                self::$ie_pwt->addWidget(
+                    self::$ie_cursor
                 );
             }
         }

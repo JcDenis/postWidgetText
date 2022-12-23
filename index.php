@@ -54,6 +54,7 @@ try {
     $posts_list = new listPostWidgetText(dcCore::app(), $posts, $counter->f(0));
 } catch (Exception $e) {
     dcCore::app()->error->add($e->getMessage());
+    $posts_list = null;
 }
 
 # Display
@@ -70,21 +71,23 @@ dcPage::breadcrumb([
 ]) .
 dcPage::notices();
 
-$filter->display('admin.plugin.' . basename(__DIR__), form::hidden('p', basename(__DIR__)));
+if ($posts_list) {
+    $filter->display('admin.plugin.' . basename(__DIR__), form::hidden('p', basename(__DIR__)));
 
-$posts_list->display(
-    $filter->page,
-    $filter->nb,
-    '<form action="' . dcCore::app()->adminurl->get('admin.plugin.' . basename(__DIR__)) . '" method="post" id="form-entries">' .
-    '%s' .
-    '<div class="two-cols">' .
-    '<p class="col checkboxes-helpers"></p>' .
-    '<p class="col right">' .
-    '<input id="do-action" type="submit" name="save" value="' . __('Delete selected widgets') . '" /></p>' .
-    dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.' . basename(__DIR__), array_merge(['p' => basename(__DIR__)], $filter->values(true))) .
-    dcCore::app()->formNonce() .
-    '</div>' .
-    '</form>'
-);
+    $posts_list->display(
+        $filter->page,
+        $filter->nb,
+        '<form action="' . dcCore::app()->adminurl->get('admin.plugin.' . basename(__DIR__)) . '" method="post" id="form-entries">' .
+        '%s' .
+        '<div class="two-cols">' .
+        '<p class="col checkboxes-helpers"></p>' .
+        '<p class="col right">' .
+        '<input id="do-action" type="submit" name="save" value="' . __('Delete selected widgets') . '" /></p>' .
+        dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.' . basename(__DIR__), array_merge(['p' => basename(__DIR__)], $filter->values(true))) .
+        dcCore::app()->formNonce() .
+        '</div>' .
+        '</form>'
+    );
+}
 
 echo '</body></html>';
