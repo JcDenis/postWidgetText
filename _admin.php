@@ -16,7 +16,7 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 require __DIR__ . '/_widgets.php';
 
-# Admin menu
+// Admin menu
 if (dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')) {
     dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
         __('Post widget text'),
@@ -28,30 +28,32 @@ if (dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')) {
 
     dcCore::app()->addBehavior('adminDashboardFavoritesV2', ['adminPostWidgetText', 'adminDashboardFavoritesV2']);
 }
-# Pref
-dcCore::app()->addBehavior('adminFiltersListsV2', ['adminPostWidgetText', 'adminFiltersListsV2']);
-dcCore::app()->addBehavior('adminBlogPreferencesFormV2', ['adminPostWidgetText', 'adminBlogPreferencesFormV2']);
-dcCore::app()->addBehavior('adminBeforeBlogSettingsUpdate', ['adminPostWidgetText', 'adminBeforeBlogSettingsUpdate']);
+dcCore::app()->addBehaviors([
+    // Pref
+    'adminFiltersListsV2'           => ['adminPostWidgetText', 'adminFiltersListsV2'],
+    'adminBlogPreferencesFormV2'    => ['adminPostWidgetText', 'adminBlogPreferencesFormV2'],
+    'adminBeforeBlogSettingsUpdate' => ['adminPostWidgetText', 'adminBeforeBlogSettingsUpdate'],
+    // Post
+    'adminPostHeaders'              => ['adminPostWidgetText', 'adminPostHeaders'],
+    'adminPostFormItems'            => ['adminPostWidgetText', 'adminPostFormItems'],
+    'adminAfterPostUpdate'          => ['adminPostWidgetText', 'adminAfterPostSave'],
+    'adminAfterPostCreate'          => ['adminPostWidgetText', 'adminAfterPostSave'],
+    'adminBeforePostDelete'         => ['adminPostWidgetText', 'adminBeforePostDelete'],
+    // Plugin "pages"
+    'adminPageHeaders'              => ['adminPostWidgetText', 'adminPostHeaders'],
+    'adminPageFormItems'            => ['adminPostWidgetText', 'adminPostFormItems'],
+    'adminAfterPageUpdate'          => ['adminPostWidgetText', 'adminAfterPostSave'],
+    'adminAfterPageCreate'          => ['adminPostWidgetText', 'adminAfterPostSave'],
+    'adminBeforePageDelete'         => ['adminPostWidgetText', 'adminBeforePostDelete'],
+]);
 
-# Post
-dcCore::app()->addBehavior('adminPostHeaders', ['adminPostWidgetText', 'adminPostHeaders']);
-dcCore::app()->addBehavior('adminPostFormItems', ['adminPostWidgetText', 'adminPostFormItems']);
-dcCore::app()->addBehavior('adminAfterPostUpdate', ['adminPostWidgetText', 'adminAfterPostSave']);
-dcCore::app()->addBehavior('adminAfterPostCreate', ['adminPostWidgetText', 'adminAfterPostSave']);
-dcCore::app()->addBehavior('adminBeforePostDelete', ['adminPostWidgetText', 'adminBeforePostDelete']);
-
-# Plugin "pages"
-dcCore::app()->addBehavior('adminPageHeaders', ['adminPostWidgetText', 'adminPostHeaders']);
-dcCore::app()->addBehavior('adminPageFormItems', ['adminPostWidgetText', 'adminPostFormItems']);
-dcCore::app()->addBehavior('adminAfterPageUpdate', ['adminPostWidgetText', 'adminAfterPostSave']);
-dcCore::app()->addBehavior('adminAfterPageCreate', ['adminPostWidgetText', 'adminAfterPostSave']);
-dcCore::app()->addBehavior('adminBeforePageDelete', ['adminPostWidgetText', 'adminBeforePostDelete']);
-
-# Plugin "importExport"
+// Plugin "importExport"
 if (dcCore::app()->blog->settings->get(basename(__DIR__))->get('importexport_active')) {
-    dcCore::app()->addBehavior('exportFullV2', ['adminPostWidgetText', 'exportFullV2']);
-    dcCore::app()->addBehavior('exportSingleV2', ['adminPostWidgetText', 'exportSingleV2']);
-    dcCore::app()->addBehavior('importInitV2', ['adminPostWidgetText', 'importInitV2']);
-    dcCore::app()->addBehavior('importSingleV2', ['adminPostWidgetText', 'importSingleV2']);
-    dcCore::app()->addBehavior('importFullV2', ['adminPostWidgetText', 'importFullV2']);
+    dcCore::app()->addBehaviors([
+        'exportFullV2'   => ['adminPostWidgetText', 'exportFullV2'],
+        'exportSingleV2' => ['adminPostWidgetText', 'exportSingleV2'],
+        'importInitV2'   => ['adminPostWidgetText', 'importInitV2'],
+        'importSingleV2' => ['adminPostWidgetText', 'importSingleV2'],
+        'importFullV2'   => ['adminPostWidgetText', 'importFullV2'],
+    ]);
 }
