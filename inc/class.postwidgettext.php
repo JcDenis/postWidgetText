@@ -83,7 +83,7 @@ class postWidgetText
         if (isset($params['option_type'])) {
             $params['sql'] .= "AND W.option_type = '" . $this->con->escape($params['option_type']) . "' ";
         } else {
-            $params['sql'] .= "AND W.option_type = '" . $this->con->escape(basename(__DIR__)) . "' ";
+            $params['sql'] .= "AND W.option_type = '" . $this->con->escape(basename(dirname(__DIR__))) . "' ";
         }
         unset($params['option_type']);
         if (!isset($params['post_type'])) {
