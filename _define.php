@@ -25,11 +25,11 @@ $this->registerModule(
             dcAuth::PERMISSION_USAGE,
             dcAuth::PERMISSION_CONTENT_ADMIN,
         ]),
-        'type'       => 'plugin',
-        'support'    => 'https://github.com/JcDenis/' . basename(__DIR__),
-        'details'    => 'https://plugins.dotaddict.org/dc2/details/' . basename(__DIR__),
-        'repository' => 'https://raw.githubusercontent.com/JcDenis/' . basename(__DIR__) . '/master/dcstore.xml',
-        'settings'   => [
+        'type'        => 'plugin',
+        'support'     => 'https://github.com/JcDenis/' . basename(__DIR__),
+        'details'     => 'https://plugins.dotaddict.org/dc2/details/' . basename(__DIR__),
+        'repository'  => 'https://raw.githubusercontent.com/JcDenis/' . basename(__DIR__) . '/master/dcstore.xml',
+        'settings'    => [
             'blog' => '#params.pwt_params',
         ],
     ]

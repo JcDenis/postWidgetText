@@ -1,3 +1,14 @@
+2022.12.23
+- use SVG icon
+- use constant for table name
+- use abstract plugin id and settings ns
+- use short settings id
+- use new addBehaviors
+- fix autoload
+- fix permissions
+- fix install
+- fix phpstan errors
+
 2022.11.20
 - fix compatibility with Dotclear 2.24 (required)
 
