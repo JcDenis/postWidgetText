@@ -10,24 +10,33 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return null;
-}
+declare(strict_types=1);
+
+namespace Dotclear\Plugin\postWidgetText;
+
+use adminGenericListV2;
+use context;
+use dcCore;
+use dcPager;
+use Dotclear\Helper\Date;
+use Dotclear\Helper\Html\Html;
+
+use form;
 
 /**
  * @ingroup DC_PLUGIN_POSTWIDGETTEXT
  * @brief postWidgetText - admin list methods.
  * @since 2.6
  */
-class listPostWidgetText extends adminGenericList
+class ManageList extends adminGenericListV2
 {
-    public function display($page, $nb_per_page, $enclose = '')
+    public function display(int $page, int $nb_per_page, string $enclose = ''): void
     {
         if ($this->rs->isEmpty()) {
-            return '<p><strong>' . __('No widget') . '</strong></p>';
+            echo '<p><strong>' . __('No widget') . '</strong></p>';
         }
 
-        $pager            = new dcPager($page, $this->rs_count, $nb_per_page, 10);
+        $pager            = new dcPager($page, (int) $this->rs_count, $nb_per_page, 10);
         $pager->html_prev = $this->html_prev;
         $pager->html_next = $this->html_next;
         $pager->var_page  = 'page';
@@ -45,7 +54,7 @@ class listPostWidgetText extends adminGenericList
         '</tr></thead><tbody>';
 
         while ($this->rs->fetch()) {
-            $w_title = html::escapeHTML($this->rs->option_title);
+            $w_title = Html::escapeHTML($this->rs->option_title);
             if ($w_title == '') {
                 $w_title = '<em>' . context::global_filters(
                     $this->rs->option_content,
@@ -75,14 +84,14 @@ class listPostWidgetText extends adminGenericList
                     $this->rs->post_type,
                     $this->rs->post_id
                 ) . '#post-wtext-form">' .
-                html::escapeHTML($this->rs->post_title) .
+                Html::escapeHTML($this->rs->post_title) .
             '</a></td>' .
-            '<td class="nowrap">' . dt::dt2str(
+            '<td class="nowrap">' . Date::dt2str(
                 __('%Y-%m-%d %H:%M'),
                 $this->rs->post_dt
             ) . '</td>' .
             '<td class="nowrap">' . $w_title . '</td>' .
-            '<td class="nowrap">' . dt::dt2str(
+            '<td class="nowrap">' . Date::dt2str(
                 __('%Y-%m-%d %H:%M'),
                 $this->rs->option_upddt
             ) . '</td>' .

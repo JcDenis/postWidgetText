@@ -10,26 +10,34 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return null;
-}
+declare(strict_types=1);
 
-dcCore::app()->addBehavior('initWidgets', ['postWidgetTextWidget', 'init']);
+namespace Dotclear\Plugin\postWidgetText;
+
+use dcCore;
+use Dotclear\Helper\Html\Html;
+use Dotclear\Plugin\widgets\WidgetsStack;
+use Dotclear\Plugin\widgets\WidgetsElement;
 
 /**
  * @ingroup DC_PLUGIN_POSTWIDGETTEXT
  * @brief postWidgetText - admin and public widget methods.
  * @since 2.6
  */
-class postWidgetTextWidget
+class Widgets
 {
-    public static function init($w)
+    /**
+     * Widget initialisation.
+     *
+     * @param  WidgetsStack $w WidgetsStack instance
+     */
+    public static function initWidgets(WidgetsStack $w): void
     {
         $w
             ->create(
                 basename(__DIR__),
                 __('Post widget text'),
-                ['postWidgetTextWidget', 'display'],
+                [self::class, 'parseWidget'],
                 null,
                 __('Add a widget with a text related to an entry')
             )
@@ -51,41 +59,46 @@ class postWidgetTextWidget
             ->addOffline();
     }
 
-    public static function display($w)
+    /**
+     * Parse widget.
+     *
+     * @param  WidgetsElement $w WidgetsElement instance
+     */
+    public static function parseWidget(WidgetsElement $w): string
     {
-        if ($w->offline
-            || !dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')
+        if (is_null(dcCore::app()->blog)
+            || is_null(dcCore::app()->ctx)
+            || $w->__get('offline')
+            || !dcCore::app()->blog->settings->get(My::id())->get('active')
             || !dcCore::app()->ctx->exists('posts')
-            || !dcCore::app()->ctx->__get('posts')->post_id
+            || !dcCore::app()->ctx->__get('posts')->f('post_id')
         ) {
-            return null;
+            return '';
         }
 
-        $title   = $w->title ?: null;
+        $title   = $w->__get('title') ?: null;
         $content = '';
 
-        $pwt = new postWidgetText();
-        $rs  = $pwt->getWidgets(['post_id' => dcCore::app()->ctx->__get('posts')->post_id]);
-
+        $rs = Utils::getWidgets(['post_id' => dcCore::app()->ctx->__get('posts')->f('post_id')]);
         if ($rs->isEmpty()) {
-            return null;
+            return '';
         }
 
-        if ('' != $rs->option_title) {
-            $title = $rs->option_title;
+        if ('' != $rs->f('option_title')) {
+            $title = $rs->f('option_title');
         }
-        if ('' != $rs->option_content_xhtml) {
-            $content = $rs->option_content_xhtml;
+        if ('' != $rs->f('option_content_xhtml')) {
+            $content = $rs->f('option_content_xhtml');
         }
-        if ('' == $content && $w->excerpt) {
-            $content = dcCore::app()->ctx->__get('posts')->post_excerpt_xhtml;
+        if ('' == $content && $w->__get('excerpt')) {
+            $content = dcCore::app()->ctx->__get('posts')->f('post_excerpt_xhtml');
         }
 
         return $w->renderDiv(
-            $w->content_only,
-            basename(__DIR__) . ' ' . $w->class,
+            (bool) $w->__get('content_only'),
+            My::id() . ' ' . $w->__get('class'),
             '',
-            ($title ? $w->renderTitle(html::escapeHTML($title)) : '') . $content
+            ($title ? $w->renderTitle(Html::escapeHTML($title)) : '') . $content
         );
     }
 }

@@ -10,50 +10,87 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return null;
-}
+declare(strict_types=1);
 
-require __DIR__ . '/_widgets.php';
+namespace Dotclear\Plugin\postWidgetText;
 
-// Admin menu
-if (dcCore::app()->blog->settings->get(basename(__DIR__))->get('active')) {
-    dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
-        __('Post widget text'),
-        dcCore::app()->adminurl->get('admin.plugin.' . basename(__DIR__)),
-        dcPage::getPF(basename(__DIR__) . '/icon.svg'),
-        preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . basename(__DIR__))) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-        dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
-    );
+use dcAdmin;
+use dcCore;
+use dcPage;
+use dcNsProcess;
 
-    dcCore::app()->addBehavior('adminDashboardFavoritesV2', ['adminPostWidgetText', 'adminDashboardFavoritesV2']);
-}
-dcCore::app()->addBehaviors([
-    // Pref
-    'adminFiltersListsV2'           => ['adminPostWidgetText', 'adminFiltersListsV2'],
-    'adminBlogPreferencesFormV2'    => ['adminPostWidgetText', 'adminBlogPreferencesFormV2'],
-    'adminBeforeBlogSettingsUpdate' => ['adminPostWidgetText', 'adminBeforeBlogSettingsUpdate'],
-    // Post
-    'adminPostHeaders'              => ['adminPostWidgetText', 'adminPostHeaders'],
-    'adminPostFormItems'            => ['adminPostWidgetText', 'adminPostFormItems'],
-    'adminAfterPostUpdate'          => ['adminPostWidgetText', 'adminAfterPostSave'],
-    'adminAfterPostCreate'          => ['adminPostWidgetText', 'adminAfterPostSave'],
-    'adminBeforePostDelete'         => ['adminPostWidgetText', 'adminBeforePostDelete'],
-    // Plugin "pages"
-    'adminPageHeaders'              => ['adminPostWidgetText', 'adminPostHeaders'],
-    'adminPageFormItems'            => ['adminPostWidgetText', 'adminPostFormItems'],
-    'adminAfterPageUpdate'          => ['adminPostWidgetText', 'adminAfterPostSave'],
-    'adminAfterPageCreate'          => ['adminPostWidgetText', 'adminAfterPostSave'],
-    'adminBeforePageDelete'         => ['adminPostWidgetText', 'adminBeforePostDelete'],
-]);
+class Backend extends dcNsProcess
+{
+    public static function init(): bool
+    {
+        static::$init = defined('DC_CONTEXT_ADMIN')
+            && My::phpCompliant()
+            && !is_null(dcCore::app()->auth) && !is_null(dcCore::app()->blog)
+            && dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+                dcCore::app()->auth::PERMISSION_USAGE,
+                dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
+            ]), dcCore::app()->blog->id);
 
-// Plugin "importExport"
-if (dcCore::app()->blog->settings->get(basename(__DIR__))->get('importexport_active')) {
-    dcCore::app()->addBehaviors([
-        'exportFullV2'   => ['adminPostWidgetText', 'exportFullV2'],
-        'exportSingleV2' => ['adminPostWidgetText', 'exportSingleV2'],
-        'importInitV2'   => ['adminPostWidgetText', 'importInitV2'],
-        'importSingleV2' => ['adminPostWidgetText', 'importSingleV2'],
-        'importFullV2'   => ['adminPostWidgetText', 'importFullV2'],
-    ]);
+        return static::$init;
+    }
+
+    public static function process(): bool
+    {
+        if (!static::$init) {
+            return false;
+        }
+
+        // nullsafe
+        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+            return false;
+        }
+
+        // backend sidebar menu icon
+        if (dcCore::app()->blog->settings->get(My::id())->get('active')) {
+            dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
+                My::name(),
+                dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
+                dcPage::getPF(My::id() . '/icon.svg'),
+                preg_match('/' . preg_quote((string) dcCore::app()->adminurl->get('admin.plugin.' . My::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+                dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcCore::app()->auth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
+            );
+            // backend user dashboard favorites icon
+            dcCore::app()->addBehavior('adminDashboardFavoritesV2', [BackendBehaviors::class, 'adminDashboardFavoritesV2']);
+        }
+
+        // backend pwt management
+        dcCore::app()->addBehaviors([
+            // user pref
+            'adminFiltersListsV2'           => [BackendBehaviors::class, 'adminFiltersListsV2'],
+            'adminBlogPreferencesFormV2'    => [BackendBehaviors::class, 'adminBlogPreferencesFormV2'],
+            'adminBeforeBlogSettingsUpdate' => [BackendBehaviors::class, 'adminBeforeBlogSettingsUpdate'],
+            // post
+            'adminPostHeaders'      => [BackendBehaviors::class, 'adminPostHeaders'],
+            'adminPostFormItems'    => [BackendBehaviors::class, 'adminPostFormItems'],
+            'adminAfterPostUpdate'  => [BackendBehaviors::class, 'adminAfterPostSave'],
+            'adminAfterPostCreate'  => [BackendBehaviors::class, 'adminAfterPostSave'],
+            'adminBeforePostDelete' => [BackendBehaviors::class, 'adminBeforePostDelete'],
+            // Plugin "pages"
+            'adminPageHeaders'      => [BackendBehaviors::class, 'adminPostHeaders'],
+            'adminPageFormItems'    => [BackendBehaviors::class, 'adminPostFormItems'],
+            'adminAfterPageUpdate'  => [BackendBehaviors::class, 'adminAfterPostSave'],
+            'adminAfterPageCreate'  => [BackendBehaviors::class, 'adminAfterPostSave'],
+            'adminBeforePageDelete' => [BackendBehaviors::class, 'adminBeforePostDelete'],
+            // widgets registration
+            'initWidgets' => [Widgets::class, 'initWidgets'],
+        ]);
+
+        // add plugin "importExport" features
+        if (!is_null(dcCore::app()->blog) && dcCore::app()->blog->settings->get(My::id())->get('importexport_active')) {
+            dcCore::app()->addBehaviors([
+                'exportFullV2'   => [ImportExport::class, 'exportFullV2'],
+                'exportSingleV2' => [ImportExport::class, 'exportSingleV2'],
+                'importInitV2'   => [ImportExport::class, 'importInitV2'],
+                'importSingleV2' => [ImportExport::class, 'importSingleV2'],
+                'importFullV2'   => [ImportExport::class, 'importFullV2'],
+            ]);
+        }
+
+        return true;
+    }
 }
