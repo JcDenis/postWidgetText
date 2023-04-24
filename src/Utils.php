@@ -24,6 +24,7 @@ use Dotclear\Database\Statement\{
     JoinStatement,
     SelectStatement
 };
+use Dotclear\Helper\Text;
 use Exception;
 
 /**
@@ -85,6 +86,32 @@ class Utils
             }
         } else {
             $sql->and('option_type = ' . $sql->quote(My::id()));
+        }
+
+        // search post title
+        if (!empty($params['search_post_title'])) {
+            $words = Text::splitWords($params['search_post_title']);
+
+            if (!empty($words)) {
+                foreach ($words as $i => $w) {
+                    $words[$i] = $sql->like('post_title', '%' . $sql->escape($w) . '%');
+                }
+                $sql->and($words);
+            }
+            unset($params['search_post_title']);
+        }
+
+        // search widget title
+        if (!empty($params['search_widget_title'])) {
+            $words = Text::splitWords($params['search_widget_title']);
+
+            if (!empty($words)) {
+                foreach ($words as $i => $w) {
+                    $words[$i] = $sql->like('option_title', '%' . $sql->escape($w) . '%');
+                }
+                $sql->and($words);
+            }
+            unset($params['search_widget_title']);
         }
 
         // work on all post type by default

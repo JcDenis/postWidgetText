@@ -62,6 +62,7 @@ class Backend extends dcNsProcess
         dcCore::app()->addBehaviors([
             // user pref
             'adminFiltersListsV2'           => [BackendBehaviors::class, 'adminFiltersListsV2'],
+            'adminColumnsListsV2'           => [BackendBehaviors::class, 'adminColumnsListsV2'],
             'adminBlogPreferencesFormV2'    => [BackendBehaviors::class, 'adminBlogPreferencesFormV2'],
             'adminBeforeBlogSettingsUpdate' => [BackendBehaviors::class, 'adminBeforeBlogSettingsUpdate'],
             // post

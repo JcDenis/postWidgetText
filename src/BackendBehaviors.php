@@ -42,6 +42,11 @@ class BackendBehaviors
         ];
     }
 
+    /**
+     * User pref widget text filters options.
+     *
+     * @param   ArrayObject     $sorts  Sort options
+     */
     public static function adminFiltersListsV2(ArrayObject $sorts): void
     {
         $sorts['pwt'] = [
@@ -50,6 +55,25 @@ class BackendBehaviors
             'post_dt',
             'desc',
             [__('entries per page'), 20],
+        ];
+    }
+
+    /**
+     * User pref for widget text columns lists.
+     *
+     * @param   ArrayObject     $cols   Columns
+     */
+    public static function adminColumnsListsV2(ArrayObject $cols): void
+    {
+        $cols[My::id()] = [
+            My::name(),
+            [
+                'post_dt'       => [true, __('Entry date')],
+                'option_title'  => [true, __('Widget title')],
+                'option_creadt' => [true, __('Widget date')],
+                'user_id'       => [true, __('Author')],
+                'post_type'     => [true, __('Entry type')],
+            ],
         ];
     }
 

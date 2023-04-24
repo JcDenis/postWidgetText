@@ -87,6 +87,9 @@ class Manage extends dcNsProcess
         # filters
         $filter = new adminGenericFilterV2('pwt');
         $filter->add(dcAdminFilters::getPageFilter());
+        $filter->add(dcAdminFilters::getInputFilter('search_post_title', __('Entry:')));
+        $filter->add(dcAdminFilters::getInputFilter('search_widget_title', __('Widget:')));
+        $filter->add(dcAdminFilters::getInputFilter('user_id', __('User:')));
         $params = $filter->params();
 
         # Get posts with text widget
@@ -118,14 +121,13 @@ class Manage extends dcNsProcess
             $filter->display('admin.plugin.' . My::id(), form::hidden('p', My::id()));
 
             $posts_list->display(
-                (int) $filter->value('page'),
-                (int) $filter->value('nb'),
+                $filter,
                 '<form action="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '" method="post" id="form-entries">' .
                 '%s' .
                 '<div class="two-cols">' .
                 '<p class="col checkboxes-helpers"></p>' .
                 '<p class="col right">' .
-                '<input id="do-action" type="submit" name="save" value="' . __('Delete selected widgets') . '" /></p>' .
+                '<input id="do-action" class="delete" type="submit" name="save" value="' . __('Delete selected widgets') . '" /></p>' .
                 dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.' . My::id(), array_merge(['p' => My::id()], $filter->values(true))) .
                 dcCore::app()->formNonce() .
                 '</div>' .
