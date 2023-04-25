@@ -31,10 +31,15 @@ use Dotclear\Helper\Html\Html;
  */
 class ManageList extends adminGenericListV2
 {
-    public function display(adminGenericFilterV2 $filter, string $enclose = '',): void
+    public function display(adminGenericFilterV2 $filter, string $enclose = ''): void
     {
+        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog)) {
+            return;
+        }
+
         if ($this->rs->isEmpty()) {
-            echo '<p><strong>' . ($filter->show() ?
+            echo '<p><strong>' . (
+                $filter->show() ?
                 __('No widgets matching the filter.') : __('No widget')
             ) . '</strong></p>';
 
@@ -43,8 +48,7 @@ class ManageList extends adminGenericListV2
 
         $pager = new dcPager((int) $filter->value('page'), (int) $this->rs_count, (int) $filter->value('nb'), 10);
 
-        $content = 
-        '<div class="table-outer">' .
+        $content = '<div class="table-outer">' .
         '<table class="clear">' .
         '<caption>' . (
             $filter->show() ?
@@ -66,6 +70,8 @@ class ManageList extends adminGenericListV2
 
         $content .= implode(iterator_to_array($cols)) . '</tr></thead><tbody>';
 
+        $tz = dcCore::app()->auth->getInfo('user_tz') ?? (dcCore::app()->blog->settings->get('system')->get('blog_timezone') ?? 'UTC');
+
         while ($this->rs->fetch()) {
             $w_title = Html::escapeHTML($this->rs->option_title);
             if ($w_title == '') {
@@ -80,24 +86,22 @@ class ManageList extends adminGenericListV2
             }
 
             $cols = new ArrayObject([
-                'check'   => '<td class="nowrap">' . (new Checkbox(['widgets[]'], (bool) $this->rs->f('option_id')))->value($this->rs->f('periodical_id'))->disabled(!$this->rs->isEditable())->render() . '</td>',
-                'name'    => '<td class="maximal"><a href="' . dcCore::app()->getPostAdminURL($this->rs->f('post_type'), $this->rs->f('post_id')) . '#post-wtext-form">' .
+                'check' => '<td class="nowrap">' . (new Checkbox(['widgets[]'], (bool) $this->rs->f('option_id')))->value($this->rs->f('option_id'))->disabled(!$this->rs->isEditable())->render() . '</td>',
+                'name'  => '<td class="maximal"><a href="' . dcCore::app()->getPostAdminURL($this->rs->f('post_type'), $this->rs->f('post_id')) . '#post-wtext-form">' .
                     Html::escapeHTML($this->rs->f('post_title')) . '</a></td>',
-                'post_dt'   => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->f('post_dt'), $tz ?? 'UTC') . '</td>',
-                'option_title' => '<td class="nowrap">' . $w_title . '</td>',
-                'option_creadt'   => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->f('option_upddt'), $tz ?? 'UTC') . '</td>',
-                'user_id' => '<td class="nowrap">' . $this->rs->f('user_id') . '</td>',
-                'post_type' => '<td class="nowrap">' . $this->rs->f('post_type') . '</td>',
+                'post_dt'       => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->f('post_dt'), $tz) . '</td>',
+                'option_title'  => '<td class="nowrap">' . $w_title . '</td>',
+                'option_creadt' => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->f('option_upddt'), $tz) . '</td>',
+                'user_id'       => '<td class="nowrap">' . $this->rs->f('user_id') . '</td>',
+                'post_type'     => '<td class="nowrap">' . $this->rs->f('post_type') . '</td>',
 
             ]);
 
             $this->userColumns(My::id(), $cols);
 
-            $content .=
-            '<tr class="line' . ($this->rs->f('post_status') == 1 ? '' : ' offline') . '" id="p' . $this->rs->f('post_id') . '">' .
+            $content .= '<tr class="line' . ($this->rs->f('post_status') == 1 ? '' : ' offline') . '" id="p' . $this->rs->f('post_id') . '">' .
             implode(iterator_to_array($cols)) .
             '</tr>';
-
         }
 
         $content .= '</tbody></table></div>';
