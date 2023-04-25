@@ -155,7 +155,7 @@ class Utils
         try {
             $sql = new SelectStatement();
             $rs  = $sql->from(dcCore::app()->prefix . My::TABLE_NAME)->column($sql->max('option_id'))->select();
-            if (is_null($rs) || $rs->isEmtpy()) {
+            if (is_null($rs) || $rs->isEmpty()) {
                 throw new Exception(__('Something went wrong)'));
             }
 
