@@ -254,7 +254,7 @@ class BackendBehaviors
     /**
      * Delete widget text on post deletion.
      *
-     * @param   int     The post ID
+     * @param   int     $post_id    The post ID
      */
     public static function adminBeforePostDelete(int $post_id): void
     {
