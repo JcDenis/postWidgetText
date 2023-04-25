@@ -1,3 +1,16 @@
+todo:
+- cleanup plugin importExport features
+
+2023.04.26
+- require dotclear 2.26
+- require PHP 8.0+
+- use namespace
+- use sql statement
+- add use columns preference
+- add list filters
+- add plugin Uninstaller features (no direct actions)
+- various fixes
+
 2022.12.23
 - use SVG icon
 - use constant for table name
