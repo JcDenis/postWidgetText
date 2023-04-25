@@ -32,6 +32,11 @@ use form;
  */
 class BackendBehaviors
 {
+    /**
+     * Get list of sortable columns.
+     *
+     * @return  array   The combo
+     */
     public static function sortbyCombo(): array
     {
         return [
@@ -77,6 +82,11 @@ class BackendBehaviors
         ];
     }
 
+    /**
+     * Add blog preferences form.
+     *
+     * @param   dcSettings  $blog_settings  The blog settings
+     */
     public static function adminBlogPreferencesFormV2(dcSettings $blog_settings): void
     {
         echo '
@@ -98,12 +108,22 @@ class BackendBehaviors
         </div>';
     }
 
+    /**
+     * Save blog preference.
+     *
+     * @param   dcSettings  $blog_settings  The blog settings
+     */
     public static function adminBeforeBlogSettingsUpdate(dcSettings $blog_settings): void
     {
         $blog_settings->get(My::id())->put('active', !empty($_POST['active']));
         $blog_settings->get(My::id())->put('importexport_active', !empty($_POST['importexport_active']));
     }
 
+    /**
+     * Add user dashboard icon.
+     *
+     * @param   dcFavorites     $favs   The user favorites
+     */
     public static function adminDashboardFavoritesV2(dcFavorites $favs): void
     {
         if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->adminurl)) {
@@ -122,9 +142,14 @@ class BackendBehaviors
         ]);
     }
 
+    /**
+     * Add script to post edition page headers.
+     *
+     * @return  string  The HTML header content
+     */
     public static function adminPostHeaders(): string
     {
-        if (is_null(dcCore::app()->auth)) {
+        if (is_null(dcCore::app()->auth) || !Utils::isActive()) {
             return '';
         }
 
@@ -135,8 +160,19 @@ class BackendBehaviors
             dcPage::jsModuleLoad(My::id() . '/js/backend.js');
     }
 
+    /**
+     * Add widget text form to post edition page.
+     *
+     * @param   ArrayObject         $main       The main page contents
+     * @param   ArrayObject         $sidebar    The sidebar page content
+     * @param   null|MetaRecord     $post       The post record
+     */
     public static function adminPostFormItems(ArrayObject $main, ArrayObject $sidebar, ?MetaRecord $post): void
     {
+        if (!Utils::isActive()) {
+            return;
+        }
+
         # _POST fields
         $title   = $_POST['post_wtitle'] ?? '';
         $content = $_POST['post_wtext']  ?? '';
@@ -170,8 +206,18 @@ class BackendBehaviors
         '</div>';
     }
 
+    /**
+     * Save widget text from post edition page.
+     *
+     * @param   Cursor  $cur        The psot Cursor
+     * @param   int     $post_id    The post ID
+     */
     public static function adminAfterPostSave(Cursor $cur, int $post_id): void
     {
+        if (!Utils::isActive()) {
+            return;
+        }
+
         # _POST fields
         $title   = $_POST['post_wtitle'] ?? '';
         $content = $_POST['post_wtext']  ?? '';
@@ -205,6 +251,11 @@ class BackendBehaviors
         }
     }
 
+    /**
+     * Delete widget text on post deletion.
+     *
+     * @param   int     The post ID
+     */
     public static function adminBeforePostDelete(int $post_id): void
     {
         # Get existing widget
