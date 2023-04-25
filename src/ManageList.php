@@ -121,7 +121,7 @@ class ManageList extends adminGenericListV2
         // display list footer
         echo
         '</tbody></table></div>' .
-        ($blocks[1] ?? '').
+        ($blocks[1] ?? '') .
         $pager->getLinks();
     }
 }
