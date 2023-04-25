@@ -149,15 +149,7 @@ class BackendBehaviors
      */
     public static function adminPostHeaders(): string
     {
-        if (is_null(dcCore::app()->auth) || !Utils::isActive()) {
-            return '';
-        }
-
-        $editor = dcCore::app()->auth->getOption('editor');
-
-        return
-            //dcCore::app()->callBehavior('adminPostEditor', $editor['xhtml'], 'pwt', ['#post_wtext'], 'xhtml') .
-            dcPage::jsModuleLoad(My::id() . '/js/backend.js');
+        return dcPage::jsModuleLoad(My::id() . '/js/backend.js');
     }
 
     /**
@@ -171,7 +163,7 @@ class BackendBehaviors
     public static function adminPostEditorTags(string $editor, string $context, ArrayObject $alt_tags, string $format): void
     {
         if ($context == 'post') {
-            $alltgas[] = '#post_wtext';
+            $alt_tags->append('#post_wtext');
         }
     }
 
