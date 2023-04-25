@@ -46,7 +46,7 @@ class Backend extends dcNsProcess
         }
 
         // backend sidebar menu icon
-        if (dcCore::app()->blog->settings->get(My::id())->get('active')) {
+        if (Utils::isActive()) {
             dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
                 My::name(),
                 dcCore::app()->adminurl->get('admin.plugin.' . My::id()),

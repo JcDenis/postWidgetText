@@ -66,10 +66,9 @@ class Widgets
      */
     public static function parseWidget(WidgetsElement $w): string
     {
-        if (is_null(dcCore::app()->blog)
+        if ($w->__get('offline')
+            || !Utils::isActive()
             || is_null(dcCore::app()->ctx)
-            || $w->__get('offline')
-            || !dcCore::app()->blog->settings->get(My::id())->get('active')
             || !dcCore::app()->ctx->exists('posts')
             || !dcCore::app()->ctx->__get('posts')->f('post_id')
         ) {
