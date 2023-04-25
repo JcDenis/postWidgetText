@@ -35,6 +35,16 @@ use Exception;
 class Utils
 {
     /**
+     * Check if module is active on current blog
+     *
+     * @return  bool    True on activated
+     */
+    public static function isActive(): bool
+    {
+        return !is_null(dcCore::app()->blog) && dcCore::app()->blog->settings->get(My::id())->get('active');
+    }
+
+    /**
      * Open cursor.
      *
      * @return  Cursor  The fresh cursor
