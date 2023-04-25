@@ -156,8 +156,23 @@ class BackendBehaviors
         $editor = dcCore::app()->auth->getOption('editor');
 
         return
-            dcCore::app()->callBehavior('adminPostEditor', $editor['xhtml'], 'pwt', ['#post_wtext'], 'xhtml') .
+            //dcCore::app()->callBehavior('adminPostEditor', $editor['xhtml'], 'pwt', ['#post_wtext'], 'xhtml') .
             dcPage::jsModuleLoad(My::id() . '/js/backend.js');
+    }
+
+    /**
+     * Add editor to post tags.
+     * 
+     * @param   string          $editor     The editor name (ie dcCKEditor)
+     * @param   string          $context    The editor context (ie post)
+     * @param   ArrayObject     $alt_tags   The editor target (ie textarea id)
+     * @param   string          $format     The editor format (ie xhtml)
+     */
+    public static function adminPostEditorTags(string $editor, string $context, ArrayObject $alt_tags, string $format): void
+    {
+        if ($context == 'post') {
+            $alltgas[] = '#post_wtext';
+        }
     }
 
     /**

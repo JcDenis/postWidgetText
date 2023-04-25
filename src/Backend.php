@@ -67,6 +67,7 @@ class Backend extends dcNsProcess
             'adminBeforeBlogSettingsUpdate' => [BackendBehaviors::class, 'adminBeforeBlogSettingsUpdate'],
             // post
             'adminPostHeaders'      => [BackendBehaviors::class, 'adminPostHeaders'],
+            'adminPostEditorTags'   => [BackendBehaviors::class, 'adminPostEditorTags'],
             'adminPostFormItems'    => [BackendBehaviors::class, 'adminPostFormItems'],
             'adminAfterPostUpdate'  => [BackendBehaviors::class, 'adminAfterPostSave'],
             'adminAfterPostCreate'  => [BackendBehaviors::class, 'adminAfterPostSave'],
