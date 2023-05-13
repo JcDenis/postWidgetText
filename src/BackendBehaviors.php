@@ -154,7 +154,7 @@ class BackendBehaviors
 
     /**
      * Add editor to post tags.
-     * 
+     *
      * @param   string          $editor     The editor name (ie dcCKEditor)
      * @param   string          $context    The editor context (ie post)
      * @param   ArrayObject     $alt_tags   The editor target (ie textarea id)
