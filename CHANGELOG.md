@@ -1,6 +1,12 @@
 todo:
 - cleanup plugin importExport features
 
+2023.05.13
+- require dotclear 2.26
+- require PHP 8.0+
+- use define php_min
+- fix post editor
+
 2023.04.26
 - require dotclear 2.26
 - require PHP 8.0+
