@@ -70,17 +70,20 @@ class Utils
         }
 
         $sql = new SelectStatement();
-        $sql->columns([
-            'option_id',
-            'option_creadt',
-            'option_upddt',
-            'option_type',
-            'option_format',
-            'option_lang',
-            'option_title',
-            'option_content',
-            'option_content_xhtml',
-        ]);
+
+        if (!$count_only) {
+            $sql->columns([
+                'option_id',
+                'option_creadt',
+                'option_upddt',
+                'option_type',
+                'option_format',
+                'option_lang',
+                'option_title',
+                'option_content',
+                'option_content_xhtml',
+            ]);
+        }
 
         $sql->join(
             (new JoinStatement())
