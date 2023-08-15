@@ -14,38 +14,29 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
 
-use dcAdminFilters;
-use adminGenericFilterV2;
 use dcCore;
-use dcNsProcess;
-use dcPage;
+use Dotclear\Core\Backend\Filter\{
+    Filters,
+    FiltersLibrary
+};
+use Dotclear\Core\Backend\{
+    Notices,
+    Page
+};
+use Dotclear\Core\Process;
 use Dotclear\Helper\Network\Http;
 use Exception;
 
-use form;
-
-class Manage extends dcNsProcess
+class Manage extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && !is_null(dcCore::app()->auth) && !is_null(dcCore::app()->blog)
-            && dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-                dcCore::app()->auth::PERMISSION_USAGE,
-                dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-            ]), dcCore::app()->blog->id);
-
-        return static::$init;
+        return self::status(My::checkContext(My::MANAGE));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
-            return false;
-        }
-
-        // nullsafe check
-        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+        if (!self::status()) {
             return false;
         }
 
@@ -56,13 +47,13 @@ class Manage extends dcNsProcess
                     Utils::delWidget((int) $id);
                 }
 
-                dcPage::addSuccessNotice(
+                Notices::addSuccessNotice(
                     __('Posts widgets successfully delete.')
                 );
                 if (!empty($_POST['redir'])) {
                     Http::redirect($_POST['redir']);
                 } else {
-                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
+                    My::redirect();
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -74,21 +65,21 @@ class Manage extends dcNsProcess
 
     public static function render(): void
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return;
         }
 
         // nullsafe check
-        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+        if (is_null(dcCore::app()->blog)) {
             return;
         }
 
         # filters
-        $filter = new adminGenericFilterV2('pwt');
-        $filter->add(dcAdminFilters::getPageFilter());
-        $filter->add(dcAdminFilters::getInputFilter('search_post_title', __('Entry:')));
-        $filter->add(dcAdminFilters::getInputFilter('search_widget_title', __('Widget:')));
-        $filter->add(dcAdminFilters::getInputFilter('user_id', __('User:')));
+        $filter = new Filters('pwt');
+        $filter->add(FiltersLibrary::getPageFilter());
+        $filter->add(FiltersLibrary::getInputFilter('search_post_title', __('Entry:')));
+        $filter->add(FiltersLibrary::getInputFilter('search_widget_title', __('Widget:')));
+        $filter->add(FiltersLibrary::getInputFilter('user_id', __('User:')));
         $params = $filter->params();
 
         # Get posts with text widget
@@ -102,38 +93,37 @@ class Manage extends dcNsProcess
         }
 
         // display
-        dcPage::openModule(
+        Page::openModule(
             My::name(),
-            dcPage::jsPageTabs() .
-            dcPage::jsModuleLoad(My::id() . '/js/manage.js') .
-            $filter->js(dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '#record')
+            Page::jsPageTabs() .
+            My::jsLoad('manage') .
+            $filter->js(My::manageUrl() . '#record')
         );
 
         echo
-        dcPage::breadcrumb([
+        Page::breadcrumb([
             __('Plugins') => '',
             My::name()    => '',
         ]) .
-        dcPage::notices();
+        Notices::getNotices();
 
         if ($posts_list) {
-            $filter->display('admin.plugin.' . My::id(), form::hidden('p', My::id()));
+            $filter->display('admin.plugin.' . My::id());
 
             $posts_list->display(
                 $filter,
-                '<form action="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '" method="post" id="form-entries">' .
+                '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
                 '%s' .
                 '<div class="two-cols">' .
                 '<p class="col checkboxes-helpers"></p>' .
                 '<p class="col right">' .
                 '<input id="do-action" class="delete" type="submit" name="save" value="' . __('Delete selected widgets') . '" /></p>' .
-                dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.' . My::id(), array_merge(['p' => My::id()], $filter->values(true))) .
-                dcCore::app()->formNonce() .
+                My::parsedHiddenFields($filter->values(true)) .
                 '</div>' .
                 '</form>'
             );
         }
 
-        dcPage::closeModule();
+        Page::closeModule();
     }
 }

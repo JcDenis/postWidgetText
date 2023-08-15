@@ -15,28 +15,20 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\postWidgetText;
 
 use dcCore;
-use dcNsProcess;
+use Dotclear\Core\Process;
 use Dotclear\Database\Structure;
 use Exception;
 
-class Install extends dcNsProcess
+class Install extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && dcCore::app()->newVersion(My::id(), dcCore::app()->plugins->moduleInfo(My::id(), 'version'));
-
-        return static::$init;
+        return self::status(My::checkContext(My::INSTALL));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
-            return false;
-        }
-
-        // nullsafe
-        if (is_null(dcCore::app()->blog)) {
+        if (!self::status()) {
             return false;
         }
 
@@ -62,7 +54,7 @@ class Install extends dcNsProcess
             (new Structure(dcCore::app()->con, dcCore::app()->prefix))->synchronize($s);
 
             // Settings
-            $s = dcCore::app()->blog->settings->get(My::id());
+            $s = My::settings();
             $s->put(
                 'active',
                 true,

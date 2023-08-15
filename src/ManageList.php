@@ -15,11 +15,13 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\postWidgetText;
 
 use ArrayObject;
-use adminGenericFilterV2;
-use adminGenericListV2;
 use context;
 use dcCore;
-use dcPager;
+use Dotclear\Core\Backend\Filter\Filters;
+use Dotclear\Core\Backend\Listing\{
+    Listing,
+    Pager
+};
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Html;
@@ -29,18 +31,18 @@ use Dotclear\Helper\Html\Html;
  * @brief postWidgetText - admin list methods.
  * @since 2.6
  */
-class ManageList extends adminGenericListV2
+class ManageList extends Listing
 {
-    public function display(adminGenericFilterV2 $filter, string $enclose = '%s'): void
+    public function display(Filters $filter, string $enclose = '%s'): void
     {
         // nullsafe
-        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog)) {
+        if (is_null(dcCore::app()->blog)) {
             return;
         }
 
         // prepare page
         $blocks = explode('%s', $enclose);
-        $pager  = new dcPager((int) $filter->value('page'), (int) $this->rs_count, (int) $filter->value('nb'), 10);
+        $pager  = new Pager((int) $filter->value('page'), (int) $this->rs_count, (int) $filter->value('nb'), 10);
         $tz     = dcCore::app()->auth->getInfo('user_tz') ?? (dcCore::app()->blog->settings->get('system')->get('blog_timezone') ?? 'UTC');
 
         // no record

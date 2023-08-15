@@ -15,10 +15,8 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\postWidgetText;
 
 use ArrayObject;
-use dcCore;
-use dcFavorites;
-use dcPage;
 use dcSettings;
+use Dotclear\Core\Backend\Favorites;
 use Dotclear\Database\{
     Cursor,
     MetaRecord
@@ -122,24 +120,20 @@ class BackendBehaviors
     /**
      * Add user dashboard icon.
      *
-     * @param   dcFavorites     $favs   The user favorites
+     * @param   Favorites   $favs   The user favorites
      */
-    public static function adminDashboardFavoritesV2(dcFavorites $favs): void
+    public static function adminDashboardFavoritesV2(Favorites $favs): void
     {
-        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->adminurl)) {
-            return;
-        }
-
-        $favs->register(My::id(), [
-            'title'       => __('Post widget text'),
-            'url'         => dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
-            'small-icon'  => dcPage::getPF(My::id() . '/icon.svg'),
-            'large-icon'  => dcPage::getPF(My::id() . '/icon.svg'),
-            'permissions' => dcCore::app()->auth->makePermissions([
-                dcCore::app()->auth::PERMISSION_USAGE,
-                dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-            ]),
-        ]);
+        $favs->register(
+            My::id(),
+            [
+                'title'      => My::name(),
+                'url'        => My::manageUrl(),
+                'small-icon' => My::icons(),
+                'large-icon' => My::icons(),
+                //'permissions' => null,
+            ]
+        );
     }
 
     /**
@@ -149,7 +143,7 @@ class BackendBehaviors
      */
     public static function adminPostHeaders(): string
     {
-        return dcPage::jsModuleLoad(My::id() . '/js/backend.js');
+        return My::jsLoad('backend');
     }
 
     /**
@@ -253,7 +247,7 @@ class BackendBehaviors
             }
             # Upddate widget
             else {
-                Utils::updWidget($w->f('option_id'), $wcur);
+                Utils::updWidget((int) $w->f('option_id'), $wcur);
             }
         }
     }

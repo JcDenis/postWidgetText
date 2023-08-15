@@ -41,7 +41,7 @@ class Utils
      */
     public static function isActive(): bool
     {
-        return !is_null(dcCore::app()->blog) && dcCore::app()->blog->settings->get(My::id())->get('active');
+        return My::settings()->get('active');
     }
 
     /**
@@ -145,7 +145,7 @@ class Utils
     public static function addWidget(Cursor $cur): int
     {
         // nullsafe
-        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog)) {
+        if (is_null(dcCore::app()->blog)) {
             throw new Exception(__('Blog is not set'));
         }
 
@@ -206,7 +206,7 @@ class Utils
     public static function updWidget(int $id, Cursor $cur): void
     {
         // nullsafe
-        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog)) {
+        if (is_null(dcCore::app()->blog)) {
             throw new Exception(__('Blog is not set'));
         }
 
@@ -257,7 +257,7 @@ class Utils
     public static function delWidget(int $id, ?string $type = null): void
     {
         // nullsafe
-        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog)) {
+        if (is_null(dcCore::app()->blog)) {
             throw new Exception(__('Blog is not set'));
         }
 

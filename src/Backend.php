@@ -14,47 +14,25 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
 
-use dcAdmin;
 use dcCore;
-use dcPage;
-use dcNsProcess;
+use Dotclear\Core\Process;
 
-class Backend extends dcNsProcess
+class Backend extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && !is_null(dcCore::app()->auth) && !is_null(dcCore::app()->blog)
-            && dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-                dcCore::app()->auth::PERMISSION_USAGE,
-                dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-            ]), dcCore::app()->blog->id);
-
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
-            return false;
-        }
-
-        // nullsafe
-        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+        if (!self::status()) {
             return false;
         }
 
         // backend sidebar menu icon
         if (Utils::isActive()) {
-            dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
-                My::name(),
-                dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
-                dcPage::getPF(My::id() . '/icon.svg'),
-                preg_match('/' . preg_quote((string) dcCore::app()->adminurl->get('admin.plugin.' . My::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-                dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcCore::app()->auth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
-            );
-            // backend user dashboard favorites icon
-            dcCore::app()->addBehavior('adminDashboardFavoritesV2', [BackendBehaviors::class, 'adminDashboardFavoritesV2']);
+            My::addBackendMenuItem();
         }
 
         // backend pwt management
@@ -82,7 +60,7 @@ class Backend extends dcNsProcess
         ]);
 
         // add plugin "importExport" features
-        if (!is_null(dcCore::app()->blog) && dcCore::app()->blog->settings->get(My::id())->get('importexport_active')) {
+        if (!My::settings()->get('importexport_active')) {
             dcCore::app()->addBehaviors([
                 'exportFullV2'   => [ImportExport::class, 'exportFullV2'],
                 'exportSingleV2' => [ImportExport::class, 'exportSingleV2'],
