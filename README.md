@@ -1,28 +1,25 @@
 # README
 
-[![Release](https://img.shields.io/badge/release-2023.08.15-a2cbe9.svg)](https://git.dotclear.watch/JcDenis/postWidgetText/releases)
-[![Date](https://img.shields.io/badge/date-2023.08.15-c44d58.svg)](https://git.dotclear.watch/JcDenis/postWidgetText/releases)
-[![Dotclear](https://img.shields.io/badge/dotclear-v2.27-137bbb.svg)](https://fr.dotclear.org/download)
+[![Release](https://img.shields.io/badge/release-2023.10.20-a2cbe9.svg)](https://git.dotclear.watch/JcDenis/postWidgetText/releases)
+![Date](https://img.shields.io/badge/date-2023.10.20-c44d58.svg)
+[![Dotclear](https://img.shields.io/badge/dotclear-v2.28-137bbb.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://plugins.dotaddict.org/dc2/details/postWidgetText)
-[![License](https://img.shields.io/github/license/JcDenis/postWidgetText)](https://git.dotclear.watch/JcDenis/postWidgetText/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-GPL--2.0-ececec.svg)](https://git.dotclear.watch/JcDenis/postWidgetText/src/branch/master/LICENSE)
 
-## WHAT IS POSTWIDGETTEXT ?
+## ABOUT
 
-_Post widget text_ is a plugin for the open-source 
-web publishing software called Dotclear.
+_postWidgetText_ is a plugin for the open-source web publishing software called [Dotclear](https://www.dotclear.org).
 
-Add a widget related to an entry with custom titles and content.
+> Add a widget related to an entry with custom titles and content.
 
 ## REQUIREMENTS
 
-_postWidgetText_ requires: 
+* Dotclear 2.28
+* PHP 8.1+
+* Dotclear permissions to manage widgets
+* Dotclear permissions to manage entries
 
-* permissions to manage widgets
-* permissions to manage entries
-* Dotclear 2.27
-* PHP 8.0+
-
-Note this plugin add table called post_option to Dotclear database.
+Note this plugin add table called "post_option" to Dotclear database.
 
 ## USAGE
 
@@ -36,9 +33,10 @@ Manage (delete) "widgets" from sidebar menu called "Post widget text".
 
 ## LINKS
 
-* License : [GNU GPL v2](https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html)
-* Source & contribution : [Gitea Page](https://git.dotclear.watch/JcDenis/postWidgetText) or [GitHub Page](https://github.com/JcDenis/postWidgetText)
-* Packages & details: [Gitea Page](https://git.dotclear.watch/JcDenis/postWidgetText/releases) or [Dotaddict Page](https://plugins.dotaddict.org/dc2/details/postWidgetText)
+* [License](https://git.dotclear.watch/JcDenis/postWidgetText/src/branch/master/LICENSE)
+* [Packages & details](https://git.dotclear.watch/JcDenis/postWidgetText/releases) (or on [Dotaddict](https://plugins.dotaddict.org/dc2/details/postWidgetText))
+* [Sources & contributions](https://git.dotclear.watch/JcDenis/postWidgetText) (or on [GitHub](https://github.com/JcDenis/postWidgetText))
+* [Issues & security](https://git.dotclear.watch/JcDenis/postWidgetText/issues) (or on [GitHub](https://github.com/JcDenis/postWidgetText/issues))
 
 ## CONTRIBUTORS
 

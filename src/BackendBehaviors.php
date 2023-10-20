@@ -1,32 +1,26 @@
 <?php
-/**
- * @brief postWidgetText, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and Contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
 
 use ArrayObject;
-use dcSettings;
 use Dotclear\Core\Backend\Favorites;
 use Dotclear\Database\{
     Cursor,
     MetaRecord
 };
 use Dotclear\Helper\Html\Html;
+use Dotclear\Interface\Core\BlogSettingsInterface;
 
 use form;
 
 /**
- * Backend behaviors.
+ * @brief       postWidgetText backend behaviors class.
+ * @ingroup     postWidgetText
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class BackendBehaviors
 {
@@ -85,7 +79,7 @@ class BackendBehaviors
      *
      * @param   dcSettings  $blog_settings  The blog settings
      */
-    public static function adminBlogPreferencesFormV2(dcSettings $blog_settings): void
+    public static function adminBlogPreferencesFormV2(BlogSettingsInterface $blog_settings): void
     {
         echo '
         <div class="fieldset">
@@ -111,7 +105,7 @@ class BackendBehaviors
      *
      * @param   dcSettings  $blog_settings  The blog settings
      */
-    public static function adminBeforeBlogSettingsUpdate(dcSettings $blog_settings): void
+    public static function adminBeforeBlogSettingsUpdate(BlogSettingsInterface $blog_settings): void
     {
         $blog_settings->get(My::id())->put('active', !empty($_POST['active']));
         $blog_settings->get(My::id())->put('importexport_active', !empty($_POST['importexport_active']));

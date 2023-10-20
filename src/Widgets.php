@@ -1,28 +1,20 @@
 <?php
-/**
- * @brief postWidgetText, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and Contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\widgets\WidgetsStack;
 use Dotclear\Plugin\widgets\WidgetsElement;
 
 /**
- * @ingroup DC_PLUGIN_POSTWIDGETTEXT
- * @brief postWidgetText - admin and public widget methods.
- * @since 2.6
+ * @brief       postWidgetText widgets class.
+ * @ingroup     postWidgetText
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Widgets
 {
@@ -37,7 +29,7 @@ class Widgets
             ->create(
                 basename(__DIR__),
                 __('Post widget text'),
-                [self::class, 'parseWidget'],
+                self::parseWidget(...),
                 null,
                 __('Add a widget with a text related to an entry')
             )
@@ -68,9 +60,8 @@ class Widgets
     {
         if ($w->__get('offline')
             || !Utils::isActive()
-            || is_null(dcCore::app()->ctx)
-            || !dcCore::app()->ctx->exists('posts')
-            || !dcCore::app()->ctx->__get('posts')->f('post_id')
+            || !App::frontend()->context()->exists('posts')
+            || !App::frontend()->context()->__get('posts')->f('post_id')
         ) {
             return '';
         }
@@ -78,7 +69,7 @@ class Widgets
         $title   = $w->__get('title') ?: null;
         $content = '';
 
-        $rs = Utils::getWidgets(['post_id' => dcCore::app()->ctx->__get('posts')->f('post_id')]);
+        $rs = Utils::getWidgets(['post_id' => App::frontend()->context()->__get('posts')->f('post_id')]);
         if ($rs->isEmpty()) {
             return '';
         }
@@ -86,11 +77,11 @@ class Widgets
         if ('' != $rs->f('option_title')) {
             $title = $rs->f('option_title');
         }
-        if ('' != $rs->f('option_content_xhtml')) {
-            $content = $rs->f('option_content_xhtml');
+        if ('' != $rs->f('option_content')) {
+            $content = $rs->f('option_content');
         }
         if ('' == $content && $w->__get('excerpt')) {
-            $content = dcCore::app()->ctx->__get('posts')->f('post_excerpt_xhtml');
+            $content = App::frontend()->context()->__get('posts')->f('post_excerpt');
         }
 
         return $w->renderDiv(

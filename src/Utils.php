@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief postWidgetText, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and Contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Database\{
     Cursor,
     MetaRecord
@@ -28,9 +18,11 @@ use Dotclear\Helper\Text;
 use Exception;
 
 /**
- * @ingroup DC_PLUGIN_POSTWIDGETTEXT
- * @brief postWidgetText - admin and public methods.
- * @since 2.6
+ * @brief       postWidgetText utils class.
+ * @ingroup     postWidgetText
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Utils
 {
@@ -51,7 +43,7 @@ class Utils
      */
     public static function openCursor(): Cursor
     {
-        return dcCore::app()->con->openCursor(dcCore::app()->prefix . My::TABLE_NAME);
+        return App::con()->openCursor(App::con()->prefix() . My::TABLE_NAME);
     }
 
     /**
@@ -64,8 +56,7 @@ class Utils
      */
     public static function getWidgets(array $params, bool $count_only = false): MetaRecord
     {
-        // nullsafe
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             throw new Exception(__('Blog is not set'));
         }
 
@@ -88,7 +79,7 @@ class Utils
         $sql->join(
             (new JoinStatement())
                 ->left()
-                ->from($sql->as(dcCore::app()->prefix . My::TABLE_NAME, 'W'))
+                ->from($sql->as(App::con()->prefix() . My::TABLE_NAME, 'W'))
                 ->on('P.post_id = W.post_id')
                 ->statement()
         );
@@ -132,7 +123,7 @@ class Utils
             $params['post_type'] = '';
         }
 
-        return dcCore::app()->blog->getPosts($params, $count_only, $sql);
+        return App::blog()->getPosts($params, $count_only, $sql);
     }
 
     /**
@@ -144,16 +135,15 @@ class Utils
      */
     public static function addWidget(Cursor $cur): int
     {
-        // nullsafe
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             throw new Exception(__('Blog is not set'));
         }
 
         // check permissions to add post
-        if (!dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcCore::app()->auth::PERMISSION_USAGE,
-            dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        if (!App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_USAGE,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
+        ]), App::blog()->id())) {
             throw new Exception(__('You are not allowed to create an entry text widget'));
         }
 
@@ -163,11 +153,11 @@ class Utils
         }
 
         // lock table
-        dcCore::app()->con->writeLock(dcCore::app()->prefix . My::TABLE_NAME);
+        App::con()->writeLock(App::con()->prefix() . My::TABLE_NAME);
 
         try {
             $sql = new SelectStatement();
-            $rs  = $sql->from(dcCore::app()->prefix . My::TABLE_NAME)->column($sql->max('option_id'))->select();
+            $rs  = $sql->from(App::con()->prefix() . My::TABLE_NAME)->column($sql->max('option_id'))->select();
             if (is_null($rs) || $rs->isEmpty()) {
                 throw new Exception(__('Something went wrong)'));
             }
@@ -183,15 +173,15 @@ class Utils
             // add new widgetText
             $cur->insert();
 
-            dcCore::app()->con->unlock();
+            App::con()->unlock();
         } catch (Exception $e) {
-            dcCore::app()->con->unlock();
+            App::con()->unlock();
 
             throw $e;
         }
 
         // update blog
-        dcCore::app()->blog->triggerBlog();
+        App::blog()->triggerBlog();
 
         // return new widgetText ID
         return (int) $cur->getField('option_id');
@@ -205,16 +195,15 @@ class Utils
      */
     public static function updWidget(int $id, Cursor $cur): void
     {
-        // nullsafe
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             throw new Exception(__('Blog is not set'));
         }
 
         // check permission to delete post
-        if (!dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcCore::app()->auth::PERMISSION_USAGE,
-            dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        if (!App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_USAGE,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
+        ]), App::blog()->id())) {
             throw new Exception(__('You are not allowed to update entries text widget'));
         }
 
@@ -228,10 +217,10 @@ class Utils
         $cur->setField('option_upddt', date('Y-m-d H:i:s'));
 
         // check if user is post owner
-        if (!dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcCore::app()->auth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
+        if (!App::auth()->check(App::auth()->makePermissions([App::auth()::PERMISSION_CONTENT_ADMIN]), App::blog()->id())) {
             $rs = self::getWidgets([
                 'option_id'  => $id,
-                'user_id'    => dcCore::app()->con->escapeStr((string) dcCore::app()->auth->userID()),
+                'user_id'    => App::con()->escapeStr(App::auth()->userID()),
                 'no_content' => true,
                 'limit'      => 1,
             ]);
@@ -245,7 +234,7 @@ class Utils
         $cur->update('WHERE option_id = ' . $id . ' ');
 
         // update blog
-        dcCore::app()->blog->triggerBlog();
+        App::blog()->triggerBlog();
     }
 
     /**
@@ -256,16 +245,15 @@ class Utils
      */
     public static function delWidget(int $id, ?string $type = null): void
     {
-        // nullsafe
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->idDefined()) {
             throw new Exception(__('Blog is not set'));
         }
 
         // check permission to delete post
-        if (!dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcCore::app()->auth::PERMISSION_DELETE,
-            dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        if (!App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_DELETE,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
+        ]), App::blog()->id())) {
             throw new Exception(__('You are not allowed to delete entries text widget'));
         }
 
@@ -278,10 +266,10 @@ class Utils
         }
 
         // check if user is post owner
-        if (!dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcCore::app()->auth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
+        if (!App::auth()->check(App::auth()->makePermissions([App::auth()::PERMISSION_CONTENT_ADMIN]), App::blog()->id())) {
             $rs = self::getWidgets([
                 'option_id'  => $id,
-                'user_id'    => dcCore::app()->con->escapeStr((string) dcCore::app()->auth->userID()),
+                'user_id'    => App::con()->escapeStr(App::auth()->userID()),
                 'no_content' => true,
                 'limit'      => 1,
             ]);
@@ -293,13 +281,13 @@ class Utils
 
         // delete widgetText
         $sql = new DeleteStatement();
-        $sql->from(dcCore::app()->prefix . My::TABLE_NAME)
+        $sql->from(App::con()->prefix() . My::TABLE_NAME)
             ->where('option_id = ' . $id)
             ->and('option_type = ' . $sql->quote($type))
             ->delete();
 
         // update blog
-        dcCore::app()->blog->triggerBlog();
+        App::blog()->triggerBlog();
     }
 
     /**
@@ -314,16 +302,16 @@ class Utils
     public static function setWidgetContent(int $option_id, string $format, string $lang, ?string &$content, ?string &$content_xhtml): void
     {
         if ($format == 'wiki') {
-            dcCore::app()->initWikiPost();
-            dcCore::app()->wiki2xhtml->setOpt('note_prefix', 'wnote-' . $option_id);
+            App::filter()->initWikiPost();
+            App::filter()->wiki()->setOpt('note_prefix', 'wnote-' . $option_id);
             if (strpos($lang, 'fr') === 0) {
-                dcCore::app()->wiki2xhtml->setOpt('active_fr_syntax', 1);
+                App::filter()->wiki()->setOpt('active_fr_syntax', 1);
             }
         }
 
         if ($content) {
-            $content_xhtml = dcCore::app()->callFormater($format, $content);
-            $content_xhtml = dcCore::app()->HTMLfilter($content_xhtml);
+            $content_xhtml = App::formater()->callEditorFormater('dcLegacyEditor', $format, $content);
+            $content_xhtml = App::filter()->HTMLfilter($content_xhtml);
         } else {
             $content_xhtml = '';
         }
@@ -331,7 +319,7 @@ class Utils
         $excerpt = $excerpt_xhtml = '';
 
         # --BEHAVIOR-- coreAfterPostContentFormat -- array
-        dcCore::app()->callBehavior('coreAfterPostContentFormat', [
+        App::behavior()->callBehavior('coreAfterPostContentFormat', [
             'excerpt'       => &$excerpt,
             'content'       => &$content,
             'excerpt_xhtml' => &$excerpt_xhtml,

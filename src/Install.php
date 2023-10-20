@@ -1,24 +1,21 @@
 <?php
-/**
- * @brief postWidgetText, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and Contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 use Dotclear\Database\Structure;
 use Exception;
 
+/**
+ * @brief       postWidgetText insatll class.
+ * @ingroup     postWidgetText
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Install extends Process
 {
     public static function init(): bool
@@ -34,7 +31,7 @@ class Install extends Process
 
         try {
             // Table is the same for plugins pollsFactory, postTask, postWidgetText
-            $s = new Structure(dcCore::app()->con, dcCore::app()->prefix);
+            $s = new Structure(App::con(), App::con()->prefix());
             $s->__get(My::TABLE_NAME)
                 ->field('option_id', 'bigint', 0, false)
                 ->field('post_id', 'bigint', 0, false)
@@ -51,7 +48,7 @@ class Install extends Process
                 ->index('idx_post_option_post', 'btree', 'post_id')
                 ->index('idx_post_option_type', 'btree', 'option_type');
 
-            (new Structure(dcCore::app()->con, dcCore::app()->prefix))->synchronize($s);
+            (new Structure(App::con(), App::con()->prefix()))->synchronize($s);
 
             // Settings
             $s = My::settings();
@@ -74,7 +71,7 @@ class Install extends Process
 
             return true;
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
 
             return false;
         }

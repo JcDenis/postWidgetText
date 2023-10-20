@@ -1,24 +1,17 @@
 <?php
-/**
- * @brief postWidgetText, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and Contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
 
-use dcCore;
-use dcBlog;
+use Dotclear\App;
 
 /**
- * Plugin importExport features.
+ * @brief       postWidgetText plugin importExport stuff.
+ * @ingroup     postWidgetText
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class ImportExport
 {
@@ -30,11 +23,11 @@ class ImportExport
             My::id(),
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
-            'FROM ' . dcCore::app()->prefix . My::TABLE_NAME . ' W ' .
-            'LEFT JOIN ' . dcCore::app()->prefix . dcBlog::POST_TABLE_NAME . ' P ' .
+            'FROM ' . App::con()->prefix() . My::TABLE_NAME . ' W ' .
+            'LEFT JOIN ' . App::con()->prefix() . App::blog()::POST_TABLE_NAME . ' P ' .
             'ON P.post_id = W.post_id ' .
             "WHERE P.blog_id = '" . $blog_id . "' " .
-            "AND W.option_type = '" . dcCore::app()->con->escapeStr((string) My::id()) . "' "
+            "AND W.option_type = '" . App::con()->escapeStr((string) My::id()) . "' "
         );
     }
 
@@ -44,17 +37,17 @@ class ImportExport
             My::id(),
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
-            'FROM ' . dcCore::app()->prefix . My::TABLE_NAME . ' W ' .
-            'LEFT JOIN ' . dcCore::app()->prefix . dcBlog::POST_TABLE_NAME . ' P ' .
+            'FROM ' . App::con()->prefix() . My::TABLE_NAME . ' W ' .
+            'LEFT JOIN ' . App::con()->prefix() . App::blog()::POST_TABLE_NAME . ' P ' .
             'ON P.post_id = W.post_id ' .
-            "WHERE W.option_type = '" . dcCore::app()->con->escapeStr((string) My::id()) . "' "
+            "WHERE W.option_type = '" . App::con()->escapeStr((string) My::id()) . "' "
         );
     }
 
     public static function importInitV2($bk)
     {
-        self::$ie_cursor = dcCore::app()->con->openCursor(
-            dcCore::app()->prefix . My::TABLE_NAME
+        self::$ie_cursor = App::con()->openCursor(
+            App::con()->prefix() . My::TABLE_NAME
         );
     }
 

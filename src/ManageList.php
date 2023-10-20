@@ -1,22 +1,11 @@
 <?php
-/**
- * @brief postWidgetText, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and Contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
 
 use ArrayObject;
-use context;
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Filter\Filters;
 use Dotclear\Core\Backend\Listing\{
     Listing,
@@ -27,23 +16,24 @@ use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Html;
 
 /**
- * @ingroup DC_PLUGIN_POSTWIDGETTEXT
- * @brief postWidgetText - admin list methods.
- * @since 2.6
+ * @brief       postWidgetText backend list class.
+ * @ingroup     postWidgetText
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class ManageList extends Listing
 {
     public function display(Filters $filter, string $enclose = '%s'): void
     {
-        // nullsafe
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             return;
         }
 
         // prepare page
         $blocks = explode('%s', $enclose);
         $pager  = new Pager((int) $filter->value('page'), (int) $this->rs_count, (int) $filter->value('nb'), 10);
-        $tz     = dcCore::app()->auth->getInfo('user_tz') ?? (dcCore::app()->blog->settings->get('system')->get('blog_timezone') ?? 'UTC');
+        $tz     = App::auth()->getInfo('user_tz') ?? (App::blog()->settings()->get('system')->get('blog_timezone') ?? 'UTC');
 
         // no record
         if ($this->rs->isEmpty()) {
@@ -84,7 +74,8 @@ class ManageList extends Listing
             $w_title = Html::escapeHTML($this->rs->option_title);
             if ($w_title == '') {
                 // widget title can accept HTML, but backend table not
-                $w_title = context::global_filters(
+                /*
+                $w_title = App::frontend()->context()->global_filters(
                     $this->rs->option_content,
                     [
                         'encode_xml',
@@ -92,6 +83,8 @@ class ManageList extends Listing
                         'cut_string' => 80,
                     ]
                 );
+                */
+                $w_title = '?';
             }
 
             // table body line
@@ -102,7 +95,7 @@ class ManageList extends Listing
                         ->__call('disabled', [!$this->rs->isEditable()])
                         ->render() .
                     '</td>',
-                'name' => '<td class="maximal"><a href="' . dcCore::app()->getPostAdminURL($this->rs->f('post_type'), $this->rs->f('post_id')) . '#post-wtext-form">' .
+                'name' => '<td class="maximal"><a href="' . App::postTypes()->getPostAdminURL($this->rs->f('post_type'), $this->rs->f('post_id')) . '#post-wtext-form">' .
                     Html::escapeHTML($this->rs->f('post_title')) . '</a></td>',
                 'post_dt'       => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->f('post_dt'), $tz) . '</td>',
                 'option_title'  => '<td class="nowrap">' . $w_title . '</td>',

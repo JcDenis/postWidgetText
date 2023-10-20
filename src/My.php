@@ -1,15 +1,5 @@
 <?php
-/**
- * @brief postWidgetText, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and Contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\postWidgetText;
@@ -17,10 +7,20 @@ namespace Dotclear\Plugin\postWidgetText;
 use Dotclear\Module\MyPlugin;
 
 /**
- * This module definitions.
+ * @brief       postWidgetText My helper.
+ * @ingroup     postWidgetText
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class My extends MyPlugin
 {
-    /** @var    string  Plugin table name */
-    public const TABLE_NAME = \initPostWidgetText::PWT_TABLE_NAME;
+    /**
+     * Plugin table name.
+     *
+     * @var     string  TABLE_NAME
+     */
+    public const TABLE_NAME = 'post_option';
+
+    // Use default permissions
 }
