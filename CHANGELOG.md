@@ -1,3 +1,9 @@
+postWidgetText 2025.03.02
+===========================================================
+* Require Dotclear 2.28
+* Require PHP 8.1
+* Fix repository URLs
+
 postWidgetText 2023.10.20
 ===========================================================
 * Require Dotclear 2.28
