@@ -27,7 +27,7 @@ class BackendBehaviors
     /**
      * Get list of sortable columns.
      *
-     * @return  array   The combo
+     * @return  array<string, string>   The combo
      */
     public static function sortbyCombo(): array
     {
@@ -42,7 +42,7 @@ class BackendBehaviors
     /**
      * User pref widget text filters options.
      *
-     * @param   ArrayObject     $sorts  Sort options
+     * @param   ArrayObject<string, mixed>  $sorts  Sort options
      */
     public static function adminFiltersListsV2(ArrayObject $sorts): void
     {
@@ -58,7 +58,7 @@ class BackendBehaviors
     /**
      * User pref for widget text columns lists.
      *
-     * @param   ArrayObject     $cols   Columns
+     * @param   ArrayObject<string, mixed>  $cols   Columns
      */
     public static function adminColumnsListsV2(ArrayObject $cols): void
     {
@@ -77,7 +77,7 @@ class BackendBehaviors
     /**
      * Add blog preferences form.
      *
-     * @param   dcSettings  $blog_settings  The blog settings
+     * @param   BlogSettingsInterface   $blog_settings  The blog settings
      */
     public static function adminBlogPreferencesFormV2(BlogSettingsInterface $blog_settings): void
     {
@@ -103,7 +103,7 @@ class BackendBehaviors
     /**
      * Save blog preference.
      *
-     * @param   dcSettings  $blog_settings  The blog settings
+     * @param   BlogSettingsInterface   $blog_settings  The blog settings
      */
     public static function adminBeforeBlogSettingsUpdate(BlogSettingsInterface $blog_settings): void
     {
@@ -143,10 +143,10 @@ class BackendBehaviors
     /**
      * Add editor to post tags.
      *
-     * @param   string          $editor     The editor name (ie dcCKEditor)
-     * @param   string          $context    The editor context (ie post)
-     * @param   ArrayObject     $alt_tags   The editor target (ie textarea id)
-     * @param   string          $format     The editor format (ie xhtml)
+     * @param   string                      $editor     The editor name (ie dcCKEditor)
+     * @param   string                      $context    The editor context (ie post)
+     * @param   ArrayObject<int, string>    $alt_tags   The editor target (ie textarea id)
+     * @param   string                      $format     The editor format (ie xhtml)
      */
     public static function adminPostEditorTags(string $editor, string $context, ArrayObject $alt_tags, string $format): void
     {
@@ -158,9 +158,9 @@ class BackendBehaviors
     /**
      * Add widget text form to post edition page.
      *
-     * @param   ArrayObject         $main       The main page contents
-     * @param   ArrayObject         $sidebar    The sidebar page content
-     * @param   null|MetaRecord     $post       The post record
+     * @param   ArrayObject<string, string>     $main       The main page contents
+     * @param   ArrayObject<string, string>     $sidebar    The sidebar page content
+     * @param   null|MetaRecord                 $post       The post record
      */
     public static function adminPostFormItems(ArrayObject $main, ArrayObject $sidebar, ?MetaRecord $post): void
     {

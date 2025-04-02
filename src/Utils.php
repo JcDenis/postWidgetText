@@ -33,7 +33,7 @@ class Utils
      */
     public static function isActive(): bool
     {
-        return My::settings()->get('active');
+        return (bool) My::settings()->get('active');
     }
 
     /**
@@ -49,8 +49,8 @@ class Utils
     /**
      * Get widgetTexts.
      *
-     * @param   array   $params     The query params
-     * @param   bool    $count_only     Return count only
+     * @param   array<string, mixed>    $params     The query params
+     * @param   bool                    $count_only     Return count only
      *
      * @return  MetaRecord  The record (that mixes post and widgetText info)
      */
@@ -220,7 +220,7 @@ class Utils
         if (!App::auth()->check(App::auth()->makePermissions([App::auth()::PERMISSION_CONTENT_ADMIN]), App::blog()->id())) {
             $rs = self::getWidgets([
                 'option_id'  => $id,
-                'user_id'    => App::con()->escapeStr(App::auth()->userID()),
+                'user_id'    => App::con()->escapeStr((string) App::auth()->userID()),
                 'no_content' => true,
                 'limit'      => 1,
             ]);
@@ -245,7 +245,7 @@ class Utils
      */
     public static function delWidget(int $id, ?string $type = null): void
     {
-        if (!App::blog()->idDefined()) {
+        if (!App::blog()->isDefined()) {
             throw new Exception(__('Blog is not set'));
         }
 
@@ -269,7 +269,7 @@ class Utils
         if (!App::auth()->check(App::auth()->makePermissions([App::auth()::PERMISSION_CONTENT_ADMIN]), App::blog()->id())) {
             $rs = self::getWidgets([
                 'option_id'  => $id,
-                'user_id'    => App::con()->escapeStr(App::auth()->userID()),
+                'user_id'    => App::con()->escapeStr((string) App::auth()->userID()),
                 'no_content' => true,
                 'limit'      => 1,
             ]);
@@ -303,9 +303,9 @@ class Utils
     {
         if ($format == 'wiki') {
             App::filter()->initWikiPost();
-            App::filter()->wiki()->setOpt('note_prefix', 'wnote-' . $option_id);
+            App::filter()->wiki()?->setOpt('note_prefix', 'wnote-' . $option_id);
             if (strpos($lang, 'fr') === 0) {
-                App::filter()->wiki()->setOpt('active_fr_syntax', 1);
+                App::filter()->wiki()?->setOpt('active_fr_syntax', 1);
             }
         }
 
