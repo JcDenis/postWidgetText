@@ -77,8 +77,8 @@ class Widgets
         if ('' != $rs->f('option_title')) {
             $title = $rs->f('option_title');
         }
-        if ('' != $rs->f('option_content')) {
-            $content = $rs->f('option_content');
+        if ('' != $rs->f('option_content_xhtml')) {
+            $content = $rs->f('option_content_xhtml');
         }
         if ('' == $content && $w->__get('excerpt')) {
             $content = App::frontend()->context()->__get('posts')->f('post_excerpt');
