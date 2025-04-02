@@ -1,3 +1,11 @@
+postWidgetText 2025.04.02
+===========================================================
+* Require Dotclear 2.33
+* Require PHP 8.1
+* Fix content render
+* Fix settings
+* Fix typo
+
 postWidgetText 2025.03.02
 ===========================================================
 * Require Dotclear 2.28

@@ -18,9 +18,9 @@ $this->registerModule(
     'Post widget text',
     'Add a widget with a text related to an entry',
     'Jean-Christian Denis and Contributors',
-    '2025.03.02',
+    '2025.04.02',
     [
-        'requires'    => [['core', '2.28']],
+        'requires'    => [['core', '2.33']],
         'permissions' => 'My',
         'settings'    => ['blog' => '#params.pwt_params'],
         'type'        => 'plugin',
