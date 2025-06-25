@@ -6,14 +6,10 @@ namespace Dotclear\Plugin\postWidgetText;
 
 use ArrayObject;
 use Dotclear\Core\Backend\Favorites;
-use Dotclear\Database\{
-    Cursor,
-    MetaRecord
-};
+use Dotclear\Database\{ Cursor, MetaRecord };
+use Dotclear\Helper\Html\Form\{ Checkbox, Div, Fieldset, Img, Input, Label, Legend, Para, Text, Textarea };
 use Dotclear\Helper\Html\Html;
 use Dotclear\Interface\Core\BlogSettingsInterface;
-
-use form;
 
 /**
  * @brief       postWidgetText backend behaviors class.
@@ -81,23 +77,35 @@ class BackendBehaviors
      */
     public static function adminBlogPreferencesFormV2(BlogSettingsInterface $blog_settings): void
     {
-        echo '
-        <div class="fieldset">
-        <h4 id="pwt_params">' . __('Post widget text') . '</h4>
-        <div class="two-cols">
-        <div class="col">
-        <p><label for="active">' .
-        form::checkbox('active', 1, (bool) $blog_settings->get(My::id())->get('active')) .
-        __('Enable post widget text on this blog') . '</label></p>
-        </div>
-        <div class="col">
-        <p><label for="importexport_active">' .
-        form::checkbox('importexport_active', 1, (bool) $blog_settings->get(My::id())->get('importexport_active')) .
-        __('Enable import/export behaviors') . '</label></p>
-        </div>
-        </div>
-        <br class="clear" />
-        </div>';
+        echo (new Fieldset(My::id() . '_params'))
+            ->legend(new Legend((new Img(My::icons()[0]))->class('icon-small')->render() . ' ' . My::name()))
+            ->items([
+                (new Div())
+                    ->class('two-cols')->separator('')
+                    ->items([
+                        (new Div())
+                            ->class('col')
+                            ->items([
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox(My::id() . 'active', (bool) $blog_settings->get(My::id())->get('active')))
+                                            ->value(1)
+                                            ->label(new Label(__('Enable post widget text on this blog'), Label::IL_FT)),
+                                    ]),
+                            ]),
+                        (new Div())
+                            ->class('col')
+                            ->items([
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox(My::id() . 'importexport_active', (bool) $blog_settings->get(My::id())->get('importexport_active')))
+                                            ->value(1)
+                                            ->label(new Label(__('Enable import/export behaviors'), Label::IL_FT)),
+                                    ]),
+                            ]),
+                    ]),
+            ])
+            ->render();
     }
 
     /**
@@ -107,8 +115,8 @@ class BackendBehaviors
      */
     public static function adminBeforeBlogSettingsUpdate(BlogSettingsInterface $blog_settings): void
     {
-        $blog_settings->get(My::id())->put('active', !empty($_POST['active']));
-        $blog_settings->get(My::id())->put('importexport_active', !empty($_POST['importexport_active']));
+        $blog_settings->get(My::id())->put('active', !empty($_POST[My::id() . 'active']));
+        $blog_settings->get(My::id())->put('importexport_active', !empty($_POST[My::id() . 'importexport_active']));
     }
 
     /**
@@ -185,20 +193,27 @@ class BackendBehaviors
             }
         }
 
-        $main['post_widget'] = '<div id="post-wtext-form">' .
-        '<h4>' . __('Additional widget') . '</h4>' .
-
-        '<p class="col">' .
-        '<label class="bold" for="post_wtitle">' . __('Widget title:') . '</label>' .
-        form::field('post_wtitle', 20, 255, Html::escapeHTML($title), 'maximal') .
-        '</p>' .
-
-        '<p class="area" id="post-wtext">' .
-        '<label class="bold" for="post_wtext">' . __('Wigdet text:') . '</label>' .
-        form::textarea('post_wtext', 50, 5, Html::escapeHTML($content)) .
-        '</p>' .
-
-        '</div>';
+        $main['post_widget'] = (new Div('post-wtext-form'))
+            ->items([
+                (new Text('h4', __('Additional widget'))),
+                (new Para())
+                    ->items([
+                        (new Input(My::id() . 'post_wtitle'))
+                            ->class('maximal')
+                            ->size(65)
+                            ->maxlength(255)
+                            ->value(Html::escapeHTML($title))
+                            ->label(new Label(__('Widget title:'), Label::OL_TF)),
+                    ]),
+                (new Para())
+                    ->items([
+                        (new Textarea(My::id() . 'post_wtext', Html::escapeHTML($content)))
+                            ->rows(6)
+                            ->class('maximal')
+                            ->label((new Label(__('Wigdet text:'), Label::OL_TF))),
+                    ]),
+            ])
+            ->render();
     }
 
     /**
@@ -214,8 +229,8 @@ class BackendBehaviors
         }
 
         # _POST fields
-        $title   = $_POST['post_wtitle'] ?? '';
-        $content = $_POST['post_wtext']  ?? '';
+        $title   = $_POST[My::id() . 'post_wtitle'] ?? '';
+        $content = $_POST[My::id() . 'post_wtext']  ?? '';
 
         # Get existing widget
         $w = Utils::getWidgets(['post_id' => (int) $post_id]);
