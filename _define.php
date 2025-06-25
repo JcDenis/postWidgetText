@@ -18,11 +18,11 @@ $this->registerModule(
     'Post widget text',
     'Add a widget with a text related to an entry',
     'Jean-Christian Denis and Contributors',
-    '2025.04.02',
+    '2025.06.26',
     [
         'requires'    => [['core', '2.33']],
         'permissions' => 'My',
-        'settings'    => ['blog' => '#params.pwt_params'],
+        'settings'    => ['blog' => '#params.' . $this->id . '_params'],
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/' . $this->id . '/issues',
         'details'     => 'https://github.com/JcDenis/' . $this->id . '/',
