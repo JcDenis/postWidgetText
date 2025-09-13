@@ -7,10 +7,8 @@ namespace Dotclear\Plugin\postWidgetText;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Filter\Filters;
-use Dotclear\Core\Backend\Listing\{
-    Listing,
-    Pager
-};
+use Dotclear\Core\Backend\Listing\Listing;
+use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Html;
@@ -60,7 +58,7 @@ class ManageList extends Listing
         // display list header
         echo
         $pager->getLinks() .
-        ($blocks[0] ?? '') .
+        $blocks[0] .
         sprintf(
             '<div class="table-outer"><table class="clear"><caption>%s</caption><thead><tr>%s</tr></thead><tbody>',
             $filter->show() ?

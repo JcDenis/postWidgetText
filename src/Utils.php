@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\postWidgetText;
 
 use Dotclear\App;
-use Dotclear\Database\{
-    Cursor,
-    MetaRecord
-};
-use Dotclear\Database\Statement\{
-    DeleteStatement,
-    JoinStatement,
-    SelectStatement
-};
+use Dotclear\Database\Cursor;
+use Dotclear\Database\MetaRecord;
+use Dotclear\Database\Statement\DeleteStatement;
+use Dotclear\Database\Statement\JoinStatement;
+use Dotclear\Database\Statement\SelectStatement;
 use Dotclear\Helper\Text;
 use Exception;
 
@@ -43,7 +39,7 @@ class Utils
      */
     public static function openCursor(): Cursor
     {
-        return App::con()->openCursor(App::con()->prefix() . My::TABLE_NAME);
+        return App::db()->con()->openCursor(App::db()->con()->prefix() . My::TABLE_NAME);
     }
 
     /**
@@ -79,7 +75,7 @@ class Utils
         $sql->join(
             (new JoinStatement())
                 ->left()
-                ->from($sql->as(App::con()->prefix() . My::TABLE_NAME, 'W'))
+                ->from($sql->as(App::db()->con()->prefix() . My::TABLE_NAME, 'W'))
                 ->on('P.post_id = W.post_id')
                 ->statement()
         );
@@ -153,11 +149,11 @@ class Utils
         }
 
         // lock table
-        App::con()->writeLock(App::con()->prefix() . My::TABLE_NAME);
+        App::db()->con()->writeLock(App::db()->con()->prefix() . My::TABLE_NAME);
 
         try {
             $sql = new SelectStatement();
-            $rs  = $sql->from(App::con()->prefix() . My::TABLE_NAME)->column($sql->max('option_id'))->select();
+            $rs  = $sql->from(App::db()->con()->prefix() . My::TABLE_NAME)->column($sql->max('option_id'))->select();
             if (is_null($rs) || $rs->isEmpty()) {
                 throw new Exception(__('Something went wrong)'));
             }
@@ -173,9 +169,9 @@ class Utils
             // add new widgetText
             $cur->insert();
 
-            App::con()->unlock();
+            App::db()->con()->unlock();
         } catch (Exception $e) {
-            App::con()->unlock();
+            App::db()->con()->unlock();
 
             throw $e;
         }
@@ -220,7 +216,7 @@ class Utils
         if (!App::auth()->check(App::auth()->makePermissions([App::auth()::PERMISSION_CONTENT_ADMIN]), App::blog()->id())) {
             $rs = self::getWidgets([
                 'option_id'  => $id,
-                'user_id'    => App::con()->escapeStr((string) App::auth()->userID()),
+                'user_id'    => App::db()->con()->escapeStr((string) App::auth()->userID()),
                 'no_content' => true,
                 'limit'      => 1,
             ]);
@@ -269,7 +265,7 @@ class Utils
         if (!App::auth()->check(App::auth()->makePermissions([App::auth()::PERMISSION_CONTENT_ADMIN]), App::blog()->id())) {
             $rs = self::getWidgets([
                 'option_id'  => $id,
-                'user_id'    => App::con()->escapeStr((string) App::auth()->userID()),
+                'user_id'    => App::db()->con()->escapeStr((string) App::auth()->userID()),
                 'no_content' => true,
                 'limit'      => 1,
             ]);
@@ -281,7 +277,7 @@ class Utils
 
         // delete widgetText
         $sql = new DeleteStatement();
-        $sql->from(App::con()->prefix() . My::TABLE_NAME)
+        $sql->from(App::db()->con()->prefix() . My::TABLE_NAME)
             ->where('option_id = ' . $id)
             ->and('option_type = ' . $sql->quote($type))
             ->delete();
@@ -293,13 +289,13 @@ class Utils
     /**
      * Parse widgetText content.
      *
-     * @param   int             $option_id      The widgetText ID
-     * @param   string          $format         The format
-     * @param   string          $lang           The lang
-     * @param   null|string     $content        The content
-     * @param   null|string     $content_xhtml  The xhtml content
+     * @param   int     $option_id      The widgetText ID
+     * @param   string  $format         The format
+     * @param   string  $lang           The lang
+     * @param   string  $content        The content
+     * @param   string  $content_xhtml  The xhtml content
      */
-    public static function setWidgetContent(int $option_id, string $format, string $lang, ?string &$content, ?string &$content_xhtml): void
+    public static function setWidgetContent(int $option_id, string $format, string $lang, string &$content, string &$content_xhtml): void
     {
         if ($format == 'wiki') {
             App::filter()->initWikiPost();
@@ -335,8 +331,8 @@ class Utils
      */
     private static function getWidgetContent(Cursor $cur, int $option_id): void
     {
-        $option_content       = $cur->getfield('option_content');
-        $option_content_xhtml = $cur->getField('option_content_xhtml');
+        $option_content       = (string) $cur->getField('option_content');
+        $option_content_xhtml = (string) $cur->getField('option_content_xhtml');
 
         self::setWidgetContent(
             $option_id,

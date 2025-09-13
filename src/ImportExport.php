@@ -23,11 +23,11 @@ class ImportExport
             My::id(),
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
-            'FROM ' . App::con()->prefix() . My::TABLE_NAME . ' W ' .
-            'LEFT JOIN ' . App::con()->prefix() . App::blog()::POST_TABLE_NAME . ' P ' .
+            'FROM ' . App::db()->con()->prefix() . My::TABLE_NAME . ' W ' .
+            'LEFT JOIN ' . App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME . ' P ' .
             'ON P.post_id = W.post_id ' .
             "WHERE P.blog_id = '" . $blog_id . "' " .
-            "AND W.option_type = '" . App::con()->escapeStr((string) My::id()) . "' "
+            "AND W.option_type = '" . App::db()->con()->escapeStr((string) My::id()) . "' "
         );
     }
 
@@ -37,17 +37,17 @@ class ImportExport
             My::id(),
             'SELECT option_type, option_content, ' .
             'option_content_xhtml, W.post_id ' .
-            'FROM ' . App::con()->prefix() . My::TABLE_NAME . ' W ' .
-            'LEFT JOIN ' . App::con()->prefix() . App::blog()::POST_TABLE_NAME . ' P ' .
+            'FROM ' . App::db()->con()->prefix() . My::TABLE_NAME . ' W ' .
+            'LEFT JOIN ' . App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME . ' P ' .
             'ON P.post_id = W.post_id ' .
-            "WHERE W.option_type = '" . App::con()->escapeStr((string) My::id()) . "' "
+            "WHERE W.option_type = '" . App::db()->con()->escapeStr((string) My::id()) . "' "
         );
     }
 
     public static function importInitV2($bk)
     {
-        self::$ie_cursor = App::con()->openCursor(
-            App::con()->prefix() . My::TABLE_NAME
+        self::$ie_cursor = App::db()->con()->openCursor(
+            App::db()->con()->prefix() . My::TABLE_NAME
         );
     }
 
