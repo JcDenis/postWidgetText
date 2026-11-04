@@ -1,3 +1,8 @@
+postWidgetText 2026.11.05
+===========================================================
+* Bump Dotclear from 2.36 to 2.39
+* Code review (phpstan max)
+
 postWidgetText 2025.09.13
 ===========================================================
 * Bump Dotclear from 2.33 to 2.36
