@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\postWidgetText;
 
 use Dotclear\App;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\widgets\WidgetsStack;
 use Dotclear\Plugin\widgets\WidgetsElement;
@@ -58,37 +59,38 @@ class Widgets
      */
     public static function parseWidget(WidgetsElement $w): string
     {
+        $posts = App::frontend()->context()->exists('posts') ? App::frontend()->context()->__get('posts') : null;
         if ($w->__get('offline')
             || !Utils::isActive()
-            || !App::frontend()->context()->exists('posts')
-            || !App::frontend()->context()->__get('posts')->f('post_id')
+            || !$posts instanceof MetaRecord
+            || !$posts->intField('post_id')
         ) {
             return '';
         }
 
-        $title   = $w->__get('title') ?: null;
+        $title   = is_string($title = $w->__get('title')) ? $title : '';
         $content = '';
 
-        $rs = Utils::getWidgets(['post_id' => App::frontend()->context()->__get('posts')->f('post_id')]);
+        $rs = Utils::getWidgets(['post_id' => $posts->intField('post_id')]);
         if ($rs->isEmpty()) {
             return '';
         }
 
-        if ('' != $rs->f('option_title')) {
-            $title = $rs->f('option_title');
+        if ('' !== $rs->strField('option_title')) {
+            $title = $rs->strField('option_title');
         }
-        if ('' != $rs->f('option_content_xhtml')) {
-            $content = $rs->f('option_content_xhtml');
+        if ('' !== $rs->strField('option_content_xhtml')) {
+            $content = $rs->strField('option_content_xhtml');
         }
-        if ('' == $content && $w->__get('excerpt')) {
-            $content = App::frontend()->context()->__get('posts')->f('post_excerpt');
+        if ('' === $content && $w->__get('excerpt')) {
+            $content = $posts->strField('post_excerpt_xhtml');
         }
 
         return $w->renderDiv(
             (bool) $w->__get('content_only'),
-            My::id() . ' ' . $w->__get('class'),
+            My::id() . ' ' . (is_string($class = $w->__get('class')) ? $class : ''),
             '',
-            ($title ? $w->renderTitle(Html::escapeHTML($title)) : '') . $content
+            ($title !== '' ? $w->renderTitle(Html::escapeHTML($title)) : '') . $content
         );
     }
 }

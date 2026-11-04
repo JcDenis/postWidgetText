@@ -81,15 +81,17 @@ class Utils
         );
 
         if (isset($params['option_type'])) {
-            if (is_array($params['option_type']) || $params['option_type'] != '') {
-                $sql->and('option_type' . $sql->in($params['option_type']));
+            $types = is_array($params['option_type']) ? $params['option_type'] : [$params['option_type']];
+            $types = array_values(array_filter($types, fn ($v): bool => is_string($v) && $v !== ''));
+            if ($types !== []) {
+                $sql->and('option_type' . $sql->in($types));
             }
         } else {
             $sql->and('option_type = ' . $sql->quote(My::id()));
         }
 
         // search post title
-        if (!empty($params['search_post_title'])) {
+        if (!empty($params['search_post_title']) && is_string($params['search_post_title'])) {
             $words = Text::splitWords($params['search_post_title']);
 
             if (!empty($words)) {
@@ -102,7 +104,7 @@ class Utils
         }
 
         // search widget title
-        if (!empty($params['search_widget_title'])) {
+        if (!empty($params['search_widget_title']) && is_string($params['search_widget_title'])) {
             $words = Text::splitWords($params['search_widget_title']);
 
             if (!empty($words)) {
@@ -159,12 +161,12 @@ class Utils
             }
 
             // set default widgetText properties
-            $cur->setField('option_id', (int) $rs->f(0) + 1);
+            $cur->setField('option_id', $rs->intField(0) + 1);
             $cur->setField('option_creadt', date('Y-m-d H:i:s'));
             $cur->setField('option_upddt', date('Y-m-d H:i:s'));
 
             // check and complete Cursor
-            self::getWidgetContent($cur, (int) $cur->getField('option_id'));
+            self::getWidgetContent($cur, $rs->intField(0) + 1);
 
             // add new widgetText
             $cur->insert();
@@ -180,7 +182,7 @@ class Utils
         App::blog()->triggerBlog();
 
         // return new widgetText ID
-        return (int) $cur->getField('option_id');
+        return is_numeric($id = $cur->getField('option_id')) ? (int) $id : 0;
     }
 
     /**
@@ -331,13 +333,13 @@ class Utils
      */
     private static function getWidgetContent(Cursor $cur, int $option_id): void
     {
-        $option_content       = (string) $cur->getField('option_content');
-        $option_content_xhtml = (string) $cur->getField('option_content_xhtml');
+        $option_content       = is_string($v = $cur->getField('option_content')) ? $v : '';
+        $option_content_xhtml = is_string($v = $cur->getField('option_content_xhtml')) ? $v : '';
 
         self::setWidgetContent(
             $option_id,
-            $cur->getField('option_format'),
-            $cur->getField('option_lang'),
+            is_string($v = $cur->getField('option_format')) ? $v : 'xhtml',
+            is_string($v = $cur->getField('option_lang')) ? $v : '',
             $option_content,
             $option_content_xhtml
         );

@@ -38,14 +38,16 @@ class Manage
         # Delete widgets
         if (!empty($_POST['save']) && !empty($_POST['widgets'])) {
             try {
-                foreach ($_POST['widgets'] as $k => $id) {
-                    Utils::delWidget((int) $id);
+                foreach (is_array($_POST['widgets']) ? $_POST['widgets'] : [] as $id) {
+                    if (is_numeric($id)) {
+                        Utils::delWidget((int) $id);
+                    }
                 }
 
                 Notices::addSuccessNotice(
                     __('Posts widgets successfully delete.')
                 );
-                if (!empty($_POST['redir'])) {
+                if (!empty($_POST['redir']) && is_string($_POST['redir'])) {
                     Http::redirect($_POST['redir']);
                 } else {
                     My::redirect();
@@ -78,7 +80,7 @@ class Manage
         try {
             $posts      = Utils::getWidgets($params);
             $counter    = Utils::getWidgets($params, true);
-            $posts_list = new ManageList($posts, $counter->f(0));
+            $posts_list = new ManageList($posts, $counter->intField(0));
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
             $posts_list = null;
@@ -110,7 +112,7 @@ class Manage
                 '<p class="col checkboxes-helpers"></p>' .
                 '<p class="col right">' .
                 '<input id="do-action" class="delete" type="submit" name="save" value="' . __('Delete selected widgets') . '" /></p>' .
-                My::parsedHiddenFields($filter->values(true)) .
+                My::parsedHiddenFields(array_filter($filter->values(true), fn ($v): bool => is_string($v) || is_int($v))) .
                 '</div>' .
                 '</form>'
             );

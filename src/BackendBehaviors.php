@@ -187,19 +187,17 @@ class BackendBehaviors
         }
 
         # _POST fields
-        $title   = $_POST['post_wtitle'] ?? '';
-        $content = $_POST['post_wtext']  ?? '';
+        $title   = is_string($_POST[My::id() . 'post_wtitle'] ?? null) ? $_POST[My::id() . 'post_wtitle'] : '';
+        $content = is_string($_POST[My::id() . 'post_wtext'] ?? null) ? $_POST[My::id() . 'post_wtext'] : '';
 
         # Existing post
         if (!is_null($post)) {
-            $post_id = (int) $post->f('post_id');
-
-            $w = Utils::getWidgets(['post_id' => $post_id]);
+            $w = Utils::getWidgets(['post_id' => $post->intField('post_id')]);
 
             # Existing widget
             if (!$w->isEmpty()) {
-                $title   = $w->f('option_title');
-                $content = $w->f('option_content');
+                $title   = $w->strField('option_title');
+                $content = $w->strField('option_content');
             }
         }
 
@@ -239,21 +237,21 @@ class BackendBehaviors
         }
 
         # _POST fields
-        $title   = $_POST[My::id() . 'post_wtitle'] ?? '';
-        $content = $_POST[My::id() . 'post_wtext']  ?? '';
+        $title   = is_string($_POST[My::id() . 'post_wtitle'] ?? null) ? $_POST[My::id() . 'post_wtitle'] : '';
+        $content = is_string($_POST[My::id() . 'post_wtext'] ?? null) ? $_POST[My::id() . 'post_wtext'] : '';
 
         # Get existing widget
-        $w = Utils::getWidgets(['post_id' => (int) $post_id]);
+        $w = Utils::getWidgets(['post_id' => $post_id]);
 
         # If new content is empty, delete old existing widget
         if (empty($title) && empty($content) && !$w->isEmpty()) {
-            Utils::delWidget((int) $w->f('option_id'));
+            Utils::delWidget($w->intField('option_id'));
         }
 
         # If new content is not empty
         if (!empty($title) || !empty($content)) {
             $wcur = Utils::openCursor();
-            $wcur->setField('post_id', (int) $post_id);
+            $wcur->setField('post_id', $post_id);
             $wcur->setField('option_type', My::id());
             $wcur->setField('option_lang', $cur->getField('post_lang'));
             $wcur->setField('option_format', $cur->getField('post_format'));
@@ -266,7 +264,7 @@ class BackendBehaviors
             }
             # Upddate widget
             else {
-                Utils::updWidget((int) $w->f('option_id'), $wcur);
+                Utils::updWidget($w->intField('option_id'), $wcur);
             }
         }
     }
@@ -279,11 +277,11 @@ class BackendBehaviors
     public static function adminBeforePostDelete(int $post_id): void
     {
         # Get existing widget
-        $w = Utils::getWidgets(['post_id' => (int) $post_id]);
+        $w = Utils::getWidgets(['post_id' => $post_id]);
 
         # If new content is empty, delete old existing widget
         if (!$w->isEmpty()) {
-            Utils::delWidget($w->f('option_id'));
+            Utils::delWidget($w->intField('option_id'));
         }
     }
 }

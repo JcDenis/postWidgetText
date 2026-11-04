@@ -19,6 +19,8 @@ use Dotclear\Helper\Html\Html;
  *
  * @author      Jean-Christian Denis
  * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * @extends Listing<string>
  */
 class ManageList extends Listing
 {
@@ -30,8 +32,13 @@ class ManageList extends Listing
 
         // prepare page
         $blocks = explode('%s', $enclose);
-        $pager  = new Pager((int) $filter->value('page'), (int) $this->rs_count, (int) $filter->value('nb'), 10);
-        $tz     = App::auth()->getInfo('user_tz') ?? (App::blog()->settings()->get('system')->get('blog_timezone') ?? 'UTC');
+        $page   = is_numeric($filter->value('page')) ? (int) $filter->value('page') : 1;
+        $nb     = is_numeric($filter->value('nb')) ? (int) $filter->value('nb') : 30;
+        $pager  = new Pager($page, (int) $this->rs_count, $nb, 10);
+        $tz     = App::auth()->getInfo('user_tz');
+        $tz     = is_string($tz) ? $tz : App::blog()->settings()->get('system')->getStr('blog_timezone', false);
+        $tz     = $tz !== '' ? $tz : 'UTC';
+        $sel    = is_array($_REQUEST['widgets'] ?? null) ? $_REQUEST['widgets'] : [];
 
         // no record
         if ($this->rs->isEmpty()) {
@@ -44,6 +51,9 @@ class ManageList extends Listing
         }
 
         // table head line
+        /**
+         * @var ArrayObject<string, string>
+         */
         $thead = new ArrayObject([
             'name'          => '<th colspan="2" class="first">' . __('Post title') . '</th>',
             'post_dt'       => '<th scope="col" class="nowrap">' . __('Post date') . '</th>',
@@ -69,7 +79,7 @@ class ManageList extends Listing
 
         // parses lines
         while ($this->rs->fetch()) {
-            $w_title = Html::escapeHTML($this->rs->option_title);
+            $w_title = Html::escapeHTML($this->rs->strField('option_title'));
             if ($w_title == '') {
                 // widget title can accept HTML, but backend table not
                 /*
@@ -85,28 +95,33 @@ class ManageList extends Listing
                 $w_title = '?';
             }
 
+            $editable = $this->rs->__call('isEditable', []);
+
             // table body line
+            /**
+             * @var ArrayObject<string, string>
+             */
             $tbody = new ArrayObject([
                 'check' => '<td class="nowrap">' .
-                    (new Checkbox(['widgets[]'], (bool) in_array($this->rs->f('option_id'), $_REQUEST['widgets'] ?? [])))
-                        ->__call('value', [$this->rs->f('option_id')])
-                        ->__call('disabled', [!$this->rs->isEditable()])
+                    (new Checkbox(['widgets[]'], in_array((string) $this->rs->intField('option_id'), $sel)))
+                        ->value($this->rs->intField('option_id'))
+                        ->disabled(!$editable)
                         ->render() .
                     '</td>',
-                'name' => '<td class="maximal"><a href="' . App::postTypes()->getPostAdminURL($this->rs->f('post_type'), $this->rs->f('post_id')) . '#post-wtext-form">' .
-                    Html::escapeHTML($this->rs->f('post_title')) . '</a></td>',
-                'post_dt'       => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->f('post_dt'), $tz) . '</td>',
+                'name' => '<td class="maximal"><a href="' . App::postTypes()->getPostAdminURL($this->rs->strField('post_type'), $this->rs->intField('post_id')) . '#post-wtext-form">' .
+                    Html::escapeHTML($this->rs->strField('post_title')) . '</a></td>',
+                'post_dt'       => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->strField('post_dt'), $tz) . '</td>',
                 'option_title'  => '<td class="nowrap">' . $w_title . '</td>',
-                'option_creadt' => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->f('option_upddt'), $tz) . '</td>',
-                'user_id'       => '<td class="nowrap">' . $this->rs->f('user_id') . '</td>',
-                'post_type'     => '<td class="nowrap">' . $this->rs->f('post_type') . '</td>',
+                'option_creadt' => '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->strField('option_upddt'), $tz) . '</td>',
+                'user_id'       => '<td class="nowrap">' . Html::escapeHTML($this->rs->strField('user_id')) . '</td>',
+                'post_type'     => '<td class="nowrap">' . Html::escapeHTML($this->rs->strField('post_type')) . '</td>',
             ]);
 
             $this->userColumns(My::id(), $tbody);
 
             // display table body line
             echo
-            '<tr class="line' . ($this->rs->f('post_status') == 1 ? '' : ' offline') . '" id="p' . $this->rs->f('post_id') . '">' .
+            '<tr class="line' . ($this->rs->intField('post_status') === App::status()->post()::PUBLISHED ? '' : ' offline') . '" id="p' . $this->rs->intField('post_id') . '">' .
             implode(iterator_to_array($tbody)) .
             '</tr>';
         }
