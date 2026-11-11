@@ -1,3 +1,9 @@
+postWidgetText 2026.11.11
+===========================================================
+* Fix DA URLs
+* Add Claude to contributors
+* Fix delete button not enabled by checkboxes helpers (select all)
+
 postWidgetText 2026.11.05
 ===========================================================
 * Bump Dotclear from 2.36 to 2.39
