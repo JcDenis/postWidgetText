@@ -28,7 +28,7 @@ class Widgets
     {
         $w
             ->create(
-                basename(__DIR__),
+                My::id(),
                 __('Post widget text'),
                 self::parseWidget(...),
                 null,
