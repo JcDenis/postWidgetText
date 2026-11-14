@@ -72,18 +72,21 @@ class Widgets
         $content = '';
 
         $rs = Utils::getWidgets(['post_id' => $posts->intField('post_id')]);
-        if ($rs->isEmpty()) {
-            return '';
-        }
-
-        if ('' !== $rs->strField('option_title')) {
-            $title = $rs->strField('option_title');
-        }
-        if ('' !== $rs->strField('option_content_xhtml')) {
-            $content = $rs->strField('option_content_xhtml');
+        if (!$rs->isEmpty()) {
+            if ('' !== $rs->strField('option_title')) {
+                $title = $rs->strField('option_title');
+            }
+            if ('' !== $rs->strField('option_content_xhtml')) {
+                $content = $rs->strField('option_content_xhtml');
+            }
         }
         if ('' === $content && $w->__get('excerpt')) {
             $content = $posts->strField('post_excerpt_xhtml');
+        }
+
+        // Nothing to show
+        if ('' === $content && !$w->__get('show')) {
+            return '';
         }
 
         return $w->renderDiv(
