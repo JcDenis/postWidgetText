@@ -128,8 +128,9 @@ class Install
                     && array_key_exists('excerpt', $widget)
                     && array_key_exists('show', $widget)
                 ) {
-                    $list[$k]['id'] = $to;
-                    $changed        = true;
+                    $widget['id'] = $to;
+                    $list[$k]     = $widget;
+                    $changed      = true;
                 }
             }
             if (!$changed) {
