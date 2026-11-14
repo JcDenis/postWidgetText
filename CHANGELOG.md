@@ -1,3 +1,13 @@
+postWidgetText 2026.11.14
+===========================================================
+* Fix widget setting to show it even if empty
+* Fix translations
+* Fix widget ID, it was the folder name
+* Migrate widget ID on update, and fix update on SQLite
+* Code review (phpstan max)
+* Add a user guide in French, with screenshots
+* Add admin help for the widgets list
+
 postWidgetText 2026.11.11
 ===========================================================
 * Fix DA URLs
