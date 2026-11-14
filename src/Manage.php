@@ -118,6 +118,7 @@ class Manage
             );
         }
 
+        Page::helpBlock(My::id() . '-widgets');
         Page::closeModule();
     }
 }
