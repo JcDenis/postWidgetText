@@ -12,6 +12,8 @@ _postWidgetText_ is a plugin for the open-source web publishing software called 
 
 > Add a widget related to an entry with custom titles and content.
 
+A [user guide in French](https://github.com/JcDenis/postWidgetText/blob/master/docs/fr/utilisation.md) is available.
+
 ## REQUIREMENTS
 
 * Dotclear 2.39
@@ -33,6 +35,7 @@ Manage (delete) "widgets" from sidebar menu called "Post widget text".
 
 ## LINKS
 
+* [User guide (in French)](https://github.com/JcDenis/postWidgetText/blob/master/docs/fr/utilisation.md)
 * [License](https://github.com/JcDenis/postWidgetText/blob/master/LICENSE)
 * [Packages & details](https://github.com/JcDenis/postWidgetText/releases) (or on [Repository](https://dotclear.org/plugin/detail/postWidgetText))
 * [Sources & contributions](https://github.com/JcDenis/postWidgetText)
