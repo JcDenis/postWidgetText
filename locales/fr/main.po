@@ -23,7 +23,7 @@ msgid "Use excerpt if no content"
 msgstr "Utiliser le résumé si le widget n'a pas de contenu"
 
 msgid "Show widget even if empty"
-msgstr "Afficher le widget même si il est vide"
+msgstr "Afficher le widget même s'il est vide"
 
 msgid "You are not allowed to create an entry text widget"
 msgstr "Vous n'êtes pas autorisé à créer un widget texte sur ce billet"
@@ -74,5 +74,19 @@ msgid "Posts widgets"
 msgstr "Widgets de billets"
 
 msgid "Delete selected widgets"
-msgstr "Effacer les widgets texte selectionnés"
+msgstr "Effacer les widgets texte sélectionnés"
 
+msgid "Entry:"
+msgstr "Billet :"
+
+msgid "Widget:"
+msgstr "Widget :"
+
+msgid "User:"
+msgstr "Utilisateur :"
+
+msgid "List of widgets (%s)"
+msgstr "Liste des widgets (%s)"
+
+msgid "Entry type"
+msgstr "Type de billet"
