@@ -6,6 +6,7 @@ namespace Dotclear\Plugin\postWidgetText;
 
 use ArrayObject;
 use Dotclear\Core\Backend\Favorites;
+use Dotclear\Core\Backend\UserPrefFilter;
 use Dotclear\Database\Cursor;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Form\Checkbox;
@@ -48,17 +49,19 @@ class BackendBehaviors
     /**
      * User pref widget text filters options.
      *
-     * @param   ArrayObject<string, mixed>  $sorts  Sort options
+     * @param   ArrayObject<array-key, UserPrefFilter>  $filters  Sort options
      */
-    public static function adminFiltersListsV2(ArrayObject $sorts): void
+    public static function adminFiltersListsV3(ArrayObject $filters): void
     {
-        $sorts['pwt'] = [
+        $filters->append(new UserPrefFilter(
+            'pwt',
             __('Post widget text'),
             self::sortbyCombo(),
             'post_dt',
             'desc',
-            [__('entries per page'), 20],
-        ];
+            __('entries per page'),
+            20
+        ));
     }
 
     /**

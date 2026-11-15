@@ -37,7 +37,7 @@ class Backend
         // backend pwt management
         App::behavior()->addBehaviors([
             // user pref
-            'adminFiltersListsV2'           => BackendBehaviors::adminFiltersListsV2(...),
+            'adminFiltersListsV3'           => BackendBehaviors::adminFiltersListsV3(...),
             'adminColumnsListsV2'           => BackendBehaviors::adminColumnsListsV2(...),
             'adminBlogPreferencesFormV2'    => BackendBehaviors::adminBlogPreferencesFormV2(...),
             'adminBeforeBlogSettingsUpdate' => BackendBehaviors::adminBeforeBlogSettingsUpdate(...),

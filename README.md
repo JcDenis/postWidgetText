@@ -16,7 +16,7 @@ A [user guide in French](https://github.com/JcDenis/postWidgetText/blob/master/d
 
 ## REQUIREMENTS
 
-* Dotclear 2.39
+* Dotclear 2.40
 * PHP 8.1+
 * Dotclear permissions to manage widgets
 * Dotclear permissions to manage entries
