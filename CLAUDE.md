@@ -30,7 +30,7 @@ Required Dotclear and PHP versions: see `_define.php`.
 * `src/Widgets.php`: widgets definition and rendering.
 * `js/`: `backend.js`, `manage.js`.
 * Database table `post_option`.
-* Behaviors used: `initWidgets`, `adminFiltersListsV2`, `adminColumnsListsV2`, `adminBlogPreferencesFormV2`, `adminBeforeBlogSettingsUpdate`, `adminPostHeaders`, `adminPostEditorTags`, `adminPostFormItems`, `adminAfterPostUpdate`, `adminAfterPostCreate`, `adminBeforePostDelete`, `adminPageHeaders`, `adminPageFormItems`, `adminAfterPageUpdate`, `adminAfterPageCreate`, `adminBeforePageDelete`, `exportFullV2`, `exportSingleV2`, `importInitV2`, `importSingleV2`, `importFullV2`.
+* Behaviors used: `initWidgets`, `adminFiltersListsV3`, `adminColumnsListsV2`, `adminBlogPreferencesFormV2`, `adminBeforeBlogSettingsUpdate`, `adminPostHeaders`, `adminPostEditorTags`, `adminPostFormItems`, `adminAfterPostUpdate`, `adminAfterPostCreate`, `adminBeforePostDelete`, `adminPageHeaders`, `adminPageFormItems`, `adminAfterPageUpdate`, `adminAfterPageCreate`, `adminBeforePageDelete`, `exportFullV2`, `exportSingleV2`, `importInitV2`, `importSingleV2`, `importFullV2`.
 
 ## Pitfalls
 
