@@ -1,3 +1,8 @@
+postWidgetText 2026.11.22
+===========================================================
+* [compat] Use adminFiltersListsV3 behavior, require Dotclear 2.40
+* [compat] Use dotclear.toggleWithLegend() instead of deprecated jQuery plugin
+
 postWidgetText 2026.11.14
 ===========================================================
 * Fix widget setting to show it even if empty

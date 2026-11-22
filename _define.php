@@ -22,7 +22,7 @@ $this->registerModule(
     'Post widget text',
     'Add a widget with a text related to an entry',
     'Jean-Christian Denis and Contributors',
-    '2026.11.14',
+    '2026.11.22',
     [
         'requires'    => [['core', '2.40']],
         'permissions' => 'My',
@@ -31,6 +31,6 @@ $this->registerModule(
         'support'     => 'https://github.com/JcDenis/' . $this->id . '/issues',
         'details'     => 'https://github.com/JcDenis/' . $this->id . '/',
         'repository'  => 'https://raw.githubusercontent.com/JcDenis/' . $this->id . '/master/dcstore.xml',
-        'date'        => '2026-11-14T13:54:34+00:00',
+        'date'        => '2026-11-22T14:10:56+00:00',
     ]
 );
